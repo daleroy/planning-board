@@ -1,32 +1,23 @@
 import './App.css';
-import styled from 'styled-components';
-import DataImporter from './DataImporter';
-import DataProvider from './state/DataProvider';
-import PlanGridDataProcessor from './state/PlanGridDataProcessor';
-
-const Container = styled.div`
-	margin: 8px;
-	border: 1px solid lightgrey;
-	border-radius: 2px;
-`;
-
-const processData = (data) =>{
-  console.log('In Process Data ');
-  console.log(data);
-}
-
-const getGridData = () => {
-  let dataProcessor = PlanGridDataProcessor.getProcessor() ;
-  dataProcessor.processTaskData().then(data => processData(data));
-  dataProcessor.processTeamCapacityData().then(data => processData);
-}
-
+import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import TopToolBar from './Components/TopToolBar';
+import routes from './routes.js';
 
 export default function App() {
-  let gridData = getGridData();
+
   return (
-    <Container>
-      <DataImporter callback={processData}/>
-    </Container>
+	  <BrowserRouter>
+	  	<TopToolBar />
+		<Switch>
+		{routes.map((route, index) => (
+  			<Route
+				key={index}
+				path={route.path}
+				component={route.component}
+				render={route.render}
+  			/>
+		))}
+		</Switch>
+	  </BrowserRouter>
   );
 }
