@@ -2,8 +2,9 @@ import React from 'react';
 import Papa from 'papaparse';
 
 export default class DataProvider extends React.Component{
-    constructor(){
-        super();
+    constructor(url){
+        super(url);
+        this.url = url;
         this.data = [];
     }
 
@@ -27,7 +28,7 @@ export default class DataProvider extends React.Component{
     }
 
     fetchCsv() {
-        return fetch('/data/test-data.csv').then(function (response) {
+        return fetch(this.url).then(function (response) {
             let reader = response.body.getReader();
             let decoder = new TextDecoder('utf-8');
 
@@ -35,6 +36,14 @@ export default class DataProvider extends React.Component{
                 return decoder.decode(result.value);
             });
         });
+    }
+
+    static getTasksProvider(){
+        return new DataProvider('/data/test-data.csv');
+    }
+
+    static getTeamCapacityProvider(){
+        return new DataProvider('/data/team-capacity.csv');
     }
 
 }

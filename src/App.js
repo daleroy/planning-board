@@ -17,7 +17,8 @@ const processData = (data) =>{
 
 const getGridData = () => {
   let dataProcessor = PlanGridDataProcessor.getProcessor() ;
-  dataProcessor.process().then(data => processData(data));
+  dataProcessor.processTaskData().then(data => processData(data));
+  dataProcessor.processTeamCapacityData().then(data => processData);
 }
 
 
