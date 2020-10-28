@@ -34,10 +34,10 @@ export default class PlanGridDataProcessor {
             let pivotRowValue ;
             let pivotColumnValue ;
             let teamEstimates = {};
-            let taskProps = {}; 
+            let taskProps = {};
 
             for (let j = 0 ; j<columnCount ; ++j){
-                let cellValue = csvTable[i][j]; 
+                let cellValue = csvTable[i][j];
                 let headerValue = headers[j];
 
                 if(j === rowIndex){
@@ -61,8 +61,7 @@ export default class PlanGridDataProcessor {
 
             planGridData.addValue(pivotRowValue, pivotColumnValue, taskProps, teamEstimates)
         }
-        this.planGridData = planGridData;
-        console.log(this.planGridData);
+        return this.planGridData = planGridData;
     }
 
     static getProcessor(){
