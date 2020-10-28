@@ -4,31 +4,65 @@ import PlanGridData from "./PlanGridData.js";
 export default class PlanGridDataProcessor {
     constructor(){
         this.props = {};
+        //TODO: Fix props key consistency
+
         this.props.rowKey = "initiative";
         this.props.columnKey = "period" ;
         this.props.teamPrefix = "team.";
+        this.props.capacity = {};
+        this.props.capacity.teamHeader = "team";
+        this.props.capacity.rtb = "rtb";
+        this.props.capacity.available = "available_capacity";
+
+        this.planGridData = new PlanGridData();
     }
 
-    csvProcessCallback = (data) => {
-        this.papaData = data ;
+    setTaskData = (data) => {
+        this.taskRawData = data ;
     }
 
+    setTeamCapacity = (data) => {
+        this.teamRawData = data ;
+    }
 
-    async process(){
-        let dataProvider = new DataProvider();
-        await dataProvider.processCsvData(this.csvProcessCallback);
+    async processTeamCapacityData(){
+        let dataProvider = DataProvider.getTeamCapacityProvider();
+        await dataProvider.processCsvData(this.setTeamCapacity);
+        console.log("Procesing Team Capacity Data");
+
+        let csvTable = this.teamRawData.data ;
+        let headers = csvTable[0];
+
+        let teamIndex = headers.indexOf(this.props.capacity.teamHeader);
+        let avlCapIndex = headers.indexOf(this.props.capacity.available);
+        let rtbCapIndex = headers.indexOf(this.props.capacity.rtb);
+        let rowCount = csvTable.length;
+        let columnCount = headers.length ;
+
+        for (let i = 1; i < rowCount ; ++i) {
+            let teamName = csvTable[i][teamIndex];
+            let avlCapacity = parseInt(csvTable[i][avlCapIndex]);
+            let rtbCapacity = parseInt(csvTable[i][rtbCapIndex]);
+
+            this.planGridData.addTeamCapacity(teamName, avlCapacity, rtbCapacity);
+        }
+        return this.planGridData;
+    }
+
+    async processTaskData(){
+        let dataProvider = DataProvider.getTasksProvider()
+        await dataProvider.processCsvData(this.setTaskData);
         console.log("Grid Data Processor");
         // console.log(this.papaData);
-        let csvTable = this.papaData.data ;
+        let csvTable = this.taskRawData.data ;
         let headers = csvTable[0];
         console.log(headers);
 
         let rowIndex = headers.indexOf(this.props.rowKey);
         let columnIndex = headers.indexOf(this.props.columnKey);
-        let rowCount = this.papaData.data.length - 1
+        let rowCount = this.taskRawData.data.length;
         let columnCount = headers.length ;
 
-        let planGridData = new PlanGridData();
 
         for (let i = 1; i < rowCount ; ++i) {
             let pivotRowValue ;
@@ -59,10 +93,12 @@ export default class PlanGridDataProcessor {
             }
             // End Processing of a row
 
-            planGridData.addValue(pivotRowValue, pivotColumnValue, taskProps, teamEstimates)
+            this.planGridData.addValue(pivotRowValue, pivotColumnValue, taskProps, teamEstimates)
         }
-        return this.planGridData = planGridData;
+        return this.planGridData ;
     }
+
+
 
     static getProcessor(){
         return new PlanGridDataProcessor();

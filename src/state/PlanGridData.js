@@ -2,7 +2,8 @@ import Task from "./Task.js";
 
 export default class PlanGridData {
     constructor(){
-        this.grid = {}
+        this.grid = {};
+        this.teamCapacity = {};
     }
 
 
@@ -28,6 +29,11 @@ export default class PlanGridData {
             }
 
         }
+    }
+
+    addTeamCapacity(teamName, avlCapacity, rtbCapacity){
+        let capacityRow = {name:teamName, availableCapacity:avlCapacity, rtbCapacity:rtbCapacity, netCapacity: avlCapacity-rtbCapacity};
+        this.teamCapacity[teamName] = capacityRow;
     }
 
     toString(){
