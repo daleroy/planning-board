@@ -1,10 +1,16 @@
-import React , { useState } from 'react';
+import React , { useState, useEffect} from 'react';
+import {GridDataContext} from '../App';
 import PlanGridDataProcessor from '../state/PlanGridDataProcessor';
+import {DragDropContext} from 'react-beautiful-dnd';
+import styled from 'styled-components';
 
-const processData = (data) =>{
-  console.log('In Process Data ');
-  console.log(data);
-}
+const Container = styled.div`
+    display: flex
+`;
+
+const ColumnContainer = styled.div`
+    flex: 1
+`;
 
 const getGridData = () => {
   let dataProcessor = PlanGridDataProcessor.getProcessor() ;
@@ -16,9 +22,22 @@ const getGridData = () => {
 }
 
 export default function TopToolBar() {
-    getGridData().then(data => processData(data));
+    const [gridData, setGridData] = React.useState();
+    useEffect(() => {
+        getGridData().then(data => {
+            setGridData(data[0])
+        });
+    }, []);
+
+    const onDragEnd = result => { }
 
     return (
-        <div>HOME</div>
+        <DragDropContext onDragEnd={onDragEnd}>
+            <Container >
+                <ColumnContainer>
+                    <h1>Hello</h1>
+                </ColumnContainer>
+            </Container >
+        </DragDropContext>
     )
 }
