@@ -3,6 +3,7 @@ import {GridDataContext} from '../App';
 import PlanGridDataProcessor from '../state/PlanGridDataProcessor';
 import {DragDropContext} from 'react-beautiful-dnd';
 import styled from 'styled-components';
+import {Draggable, Droppable} from 'react-beautiful-dnd';
 
 const TaskContainer = styled.div`
     flex: 1 1 10px;
@@ -22,6 +23,10 @@ const RowId = styled.div`
     border: 1px solid black;
 `
 const Row = styled.div`
+    flex: 1 1 20%;
+    border: 1px solid black;
+`;
+const Header = styled.h3`
     flex: 1 1 20%;
     border: 1px solid black;
 `;
@@ -53,7 +58,7 @@ export default function TopToolBar() {
         }
 
         return columnKeys.orderedValues.map((id) => {
-            return (<Row>{id}</Row>);
+            return (<Header>{id}</Header>);
         });
     }
 
@@ -63,8 +68,14 @@ export default function TopToolBar() {
 
 
             return (<Row>
-                {taskList.map((task) => {
-                    return (<TaskContainer>{task.mfProps.ref}</TaskContainer>);
+                {taskList.map((task, index) => {
+                    return (
+                        <Draggable draggableId={task.mfProps.ref} index={index}>
+                            {(provided) => (
+                                <TaskContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>{task.mfProps.ref}</TaskContainer>
+                            )}
+                        </Draggable>
+                    );
                 })}
             </Row>)
         })
@@ -79,10 +90,15 @@ export default function TopToolBar() {
             const rowValues = grid[rowId];
             const rows = renderRow(rowValues, columnKeys.orderedValues);
             return (
-                <RowContainer >
-                    <RowId>{rowId}</RowId>
-                    {rows}
-                </RowContainer >
+                <Droppable droppableId={`${Math.random()}`}>
+                    {(provided)=>(
+                    <RowContainer ref={provided.innerRef} {...provided.droppableProps}>
+                        <RowId>{rowId}</RowId>
+                        {rows}
+                    </RowContainer >
+                )}
+
+                </Droppable>
             );
         });
     }
@@ -91,7 +107,7 @@ export default function TopToolBar() {
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <RowContainer >
-                <Row>Initatives</Row>
+                <Header>Initatives</Header>
                 {renderColumnHeaders(gridData)}
             </RowContainer >
             {renderRows(gridData)}
