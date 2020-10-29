@@ -60,9 +60,15 @@ export default class PlanGridData {
 
     addValue = (rowKey, columnKey, taskProps, teamEstimate)=>{
         // Initialize should have been called before
+        Util.log('In Add Value');
+        Util.logo('rowKey', rowKey);
+        Util.logo('teamEstimate', teamEstimate)
+        
+
         let task = new Task(taskProps,teamEstimate);
         this.taskMaster.set(task.id, task);
         this.grid[rowKey][columnKey].taskList.push(task);
+
         this.handleAddCell(rowKey, columnKey, task);
     }
 
@@ -89,8 +95,15 @@ export default class PlanGridData {
     
 
     summarizeTeamEstimates = (aggFn, rowKey, colKey, task)=>{
+        Util.log('In Summarize');
+        Util.logo('Row Key ', rowKey);
+        Util.logo('Column Key ', colKey);
+        Util.logo('Task',task);
+
         let teamSummaryForCol = this.teamCapacitySummary[colKey];
         let teamEstimates = task.teamEstimates
+        
+
         if(!teamEstimates) return ;
         for(const [team, estimate] of Object.entries(teamEstimates)){
             let newTotalEstimate ;

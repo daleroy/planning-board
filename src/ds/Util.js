@@ -12,4 +12,19 @@ export default class Util{
             }
         }
     }
+
+    static isBlank(str) {
+        return (!str || /^\s*$/.test(str));
+    }
+
+    static isNotBlank(str){
+        return !Util.isBlank(str);
+    }
+
+    static log(desc){
+        console.log(desc);
+    }
+    static logo(desc, object){
+        console.log(desc + ":%o:"+ " ",object);
+    }
 }

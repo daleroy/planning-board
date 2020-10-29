@@ -19,21 +19,48 @@ export default class PlanGridDataProcessor {
     }
 
     setTaskData = (data) => {
+        console.log("Setting Task Data");
         this.taskRawData = data ;
     }
 
     setTeamCapacity = (data) => {
+        console.log("Setting Team Capacity");
         this.teamRawData = data ;
     }
 
+    async process(){
+        await this.processTeamCapacityData();
+        await this.processTaskData();
+        this.translate();
+        console.log(this.planGridData);
+        return Promise.resolve(this.planGridData);
+    }
     
 
     async processTeamCapacityData(){
         let dataProvider = DataProvider.getTeamCapacityProvider();
-        await dataProvider.processCsvData(this.setTeamCapacity);
-        console.log("Procesing Team Capacity Data");
+        await dataProvider.processCsvData(this.setTeamCapacity)
+        console.log("Done processing team Capacity Data");
+    }
 
-        let csvTable = this.teamRawData.data ;
+    async processTaskData(){
+        let dataProvider = DataProvider.getTasksProvider();
+        await dataProvider.processCsvData(this.setTaskData);
+        console.log("Done processing team task Data");
+    }
+
+    translate(){
+        this.translateCsvToTeamData();
+        this.translateCsvToTaskData();
+    }
+
+    translateCsvToTeamData(){
+        if(!this.teamRawData){
+            console.log('Trying to process CSV but no data found');
+            return ;
+        }
+
+        let csvTable = this.teamRawData.data;
         let headers = csvTable[0];
 
         let teamIndex = headers.indexOf(this.props.capacity.teamHeader);
@@ -41,7 +68,7 @@ export default class PlanGridDataProcessor {
         let rtbCapIndex = headers.indexOf(this.props.capacity.rtb);
         let rowCount = csvTable.length;
 
-        for (let i = 1; i < rowCount ; ++i) {
+        for (let i = 1; i < rowCount; ++i) {
             let teamName = csvTable[i][teamIndex];
             let avlCapacity = parseInt(csvTable[i][avlCapIndex]);
             let rtbCapacity = parseInt(csvTable[i][rtbCapIndex]);
@@ -51,63 +78,61 @@ export default class PlanGridDataProcessor {
         return this.planGridData;
     }
 
-    async processTaskData(){
-        let dataProvider = DataProvider.getTasksProvider()
-        await dataProvider.processCsvData(this.setTaskData);
+    translateCsvToTaskData() {
+        if(!this.taskRawData){
+            console.log('Trying to process CSV but no data found');
+            return ;
+        }
 
-        let csvTable = this.taskRawData.data ;
+        let csvTable = this.taskRawData.data;
         let headers = csvTable[0];
 
         let rowIndex = headers.indexOf(this.props.rowKey);
         let columnIndex = headers.indexOf(this.props.columnKey);
         let rowCount = this.taskRawData.data.length;
-        let columnCount = headers.length ;
+        let columnCount = headers.length;
 
         //Remove header row
         let csvTableMinusHeader = csvTable.slice(1);
-        
-        console.log('Before Initialize = '+ csvTableMinusHeader);    
-        let rowValues = Util.extractColumn(csvTableMinusHeader,rowIndex);
-        console.log('rowValues'+ rowValues);
+
+        let rowValues = Util.extractColumn(csvTableMinusHeader, rowIndex);
+        // console.log('rowValues' + rowValues);
         let columnValues = Util.extractColumn(csvTableMinusHeader, columnIndex);
-        console.log('columnValues'+ columnValues);
+        // console.log('columnValues' + columnValues);
         this.planGridData.initialize(rowValues, columnValues);
 
-        for (let i = 1; i < rowCount ; ++i) {
-            let pivotRowValue ;
-            let pivotColumnValue ;
+        for (let i = 1; i < rowCount; ++i) {
+            let pivotRowValue;
+            let pivotColumnValue;
             let teamEstimates = {};
             let taskProps = {};
 
-            for (let j = 0 ; j<columnCount ; ++j){
+            for (let j = 0; j < columnCount; ++j) {
                 let cellValue = csvTable[i][j];
                 let headerValue = headers[j];
 
-                if(j === rowIndex){
+                if (j === rowIndex) {
                     pivotRowValue = cellValue;
-                }else if(j=== columnIndex){
-                    pivotColumnValue = cellValue ;
-                }else if(headerValue.startsWith(this.props.teamPrefix)){
+                } else if (j === columnIndex) {
+                    pivotColumnValue = cellValue;
+                } else if (headerValue.startsWith(this.props.teamPrefix)) {
                     //Processing Estimate
-                    if(cellValue !== ""){
+                    if (Util.isNotBlank(cellValue)) {
                         let estimate = parseInt(cellValue);
-                        teamEstimates[headerValue] = estimate ;
-                    }else{
+                        teamEstimates[headerValue] = estimate;
+                    } else {
                         // don't need to process estimate
                     }
-                }else{
+                } else {
                     //Processing a regular prop
-                    taskProps[headerValue] = cellValue ;
+                    taskProps[headerValue] = cellValue;
                 }
             }
             // End Processing of a row
-
-            this.planGridData.addValue(pivotRowValue, pivotColumnValue, taskProps, teamEstimates)
+            this.planGridData.addValue(pivotRowValue, pivotColumnValue, taskProps, teamEstimates);
         }
-        return this.planGridData ;
+        return this.planGridData;
     }
-
-
 
     static getProcessor(){
         return new PlanGridDataProcessor();
