@@ -4,16 +4,11 @@ import PlanGridDataProcessor from '../state/PlanGridDataProcessor';
 import {DragDropContext} from 'react-beautiful-dnd';
 import styled from 'styled-components';
 
-const Container = styled.div`
-    height: 800px;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-`;
-
-const ColumnContainer = styled.h4`
+const TaskContainer = styled.div`
     flex: 1 1 10px;
-    border: 1px dashed red;
+    background-color: #f0f8ff;
+    border: 1px solid #d8e8f8;
+    font-size: 14px;
 `;
 
 const RowContainer = styled.div`
@@ -21,7 +16,12 @@ const RowContainer = styled.div`
     flex-wrap: nowrap;
 `;
 
-const Row = styled.h1`
+const RowId = styled.div`
+    font-size: 18px;
+    flex: 1 1 20%;
+    border: 1px solid black;
+`
+const Row = styled.div`
     flex: 1 1 20%;
     border: 1px solid black;
 `;
@@ -64,7 +64,7 @@ export default function TopToolBar() {
 
             return (<Row>
                 {taskList.map((task) => {
-                    return (<ColumnContainer>{task.mfProps.ref}</ColumnContainer>);
+                    return (<TaskContainer>{task.mfProps.ref}</TaskContainer>);
                 })}
             </Row>)
         })
@@ -80,7 +80,7 @@ export default function TopToolBar() {
             const rows = renderRow(rowValues, columnKeys.orderedValues);
             return (
                 <RowContainer >
-                    <Row>{rowId}</Row>
+                    <RowId>{rowId}</RowId>
                     {rows}
                 </RowContainer >
             );
