@@ -78,21 +78,21 @@ export default class PlanGridData {
 
     handleMove = (taskId, fromCellId, toCellId)=>{
         // get task
-        let task = this.task.get(taskId);
-        
+        let task = this.taskMaster.get(taskId);
+
         //Remove from previous location
         const [removedRowKey,removedColKey] = this.keyForCell(fromCellId);
         let tasksAtPrevLocation = this.grid[removedRowKey][removedColKey].taskList ;
         Util.removeItem(tasksAtPrevLocation, taskId);
         this.summarizeTeamEstimates(Util.substractor, removedRowKey, removedColKey, task);
-        
+
         const [targetRowKey, targetColKey] = this.keyForCell(toCellId);
         let tasksAtTargetLocation = this.grid[targetRowKey][targetColKey].taskList ;
         tasksAtTargetLocation.push(task);
         this.summarizeTeamEstimates(Util.adder, targetRowKey, targetColKey,task);
     }
 
-    
+
 
     summarizeTeamEstimates = (aggFn, rowKey, colKey, task)=>{
         Util.log('In Summarize');
@@ -111,7 +111,7 @@ export default class PlanGridData {
                 let currTeamSummaryRow  = teamSummaryForCol.get(team);
                 newTotalEstimate = aggFn(currTeamSummaryRow.totalEstimate,estimate) ;
             }else{
-                newTotalEstimate = aggFn(0,estimate) ; 
+                newTotalEstimate = aggFn(0,estimate) ;
             }
             let capacityRow = this.teamCapacity[team];
             let pendingCapacity = capacityRow.netCapacity - newTotalEstimate ;
@@ -127,7 +127,7 @@ export default class PlanGridData {
     keyForCell(cellId) {
         let keyMap = this.cellIdToKeyMap.get(cellId);
         let removedRowKey = keyMap.rowKey;
-        let removedColKey = keyMap.colKey;
+        let removedColKey = keyMap.columnKey;
         return [removedRowKey, removedColKey];
     }
 

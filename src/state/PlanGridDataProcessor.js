@@ -35,7 +35,6 @@ export default class PlanGridDataProcessor {
         console.log(this.planGridData);
         return Promise.resolve(this.planGridData);
     }
-    
 
     async processTeamCapacityData(){
         let dataProvider = DataProvider.getTeamCapacityProvider();
@@ -96,9 +95,7 @@ export default class PlanGridDataProcessor {
         let csvTableMinusHeader = csvTable.slice(1);
 
         let rowValues = Util.extractColumn(csvTableMinusHeader, rowIndex);
-        // console.log('rowValues' + rowValues);
         let columnValues = Util.extractColumn(csvTableMinusHeader, columnIndex);
-        // console.log('columnValues' + columnValues);
         this.planGridData.initialize(rowValues, columnValues);
 
         for (let i = 1; i < rowCount; ++i) {
