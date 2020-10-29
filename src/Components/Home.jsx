@@ -5,12 +5,25 @@ import {DragDropContext} from 'react-beautiful-dnd';
 import styled from 'styled-components';
 
 const Container = styled.div`
-    display: flex
+    height: 800px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+
 `;
 
-const ColumnContainer = styled.div`
-    flex: 1
+const ColumnContainer = styled.h4`
+    flex: 1 1 10px;
 `;
+
+const RowContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+`;
+
+const Row = styled.h1`
+    flex: 1 1 160px;
+`
 
 const getGridData = () => {
   let dataProcessor = PlanGridDataProcessor.getProcessor() ;
@@ -21,8 +34,19 @@ const getGridData = () => {
   ]);
 }
 
+const renderRow = ({grid}) => {
+    if (!grid) {
+        return
+    }
+    const initiatives = Object.keys(grid);
+
+    return initiatives.map((id) => {
+        return (<ColumnContainer>{id}</ColumnContainer>);
+    });
+}
+
 export default function TopToolBar() {
-    const [gridData, setGridData] = React.useState();
+    const [gridData, setGridData] = React.useState({});
     useEffect(() => {
         getGridData().then(data => {
             setGridData(data[0])
@@ -31,13 +55,21 @@ export default function TopToolBar() {
 
     const onDragEnd = result => { }
 
+
+    console.dir(gridData);
     return (
         <DragDropContext onDragEnd={onDragEnd}>
+            <RowContainer >
+                <Row>Initatives</Row>
+                <Row>Q1</Row>
+                <Row>Q2</Row>
+                <Row>Q3</Row>
+                <Row>Q4</Row>
+            </RowContainer >
             <Container >
-                <ColumnContainer>
-                    <h1>Hello</h1>
-                </ColumnContainer>
+                    {renderRow(gridData)}
             </Container >
+
         </DragDropContext>
     )
 }
