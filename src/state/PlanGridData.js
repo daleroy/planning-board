@@ -10,33 +10,47 @@ export default class PlanGridData {
 
     }
 
+    orderedRowKeys(){
+        return this.rowKeys.orderedValues;
+    }
+
+    orderedColumnKeys(){
+        return this.columnKeys.orderedValues;
+    }
+
+    generateId(rowNo, colNo){
+        return ''+rowNo + ',' + colNo ;
+    }
+
+    initialize(rowValues, columnValues){
+        this.rowKeys = rowValues.reduce((rowKeys,item)=>{
+            rowKeys.add(item);
+            return rowKeys;
+        },this.rowKeys);
+
+        this.columnKeys = columnValues.reduce((columnKeys, item)=>{
+            columnKeys.add(item);
+            return columnKeys ;
+        },this.columnKeys)
+
+        let [rowNo, colNo] =[-1,-1];
+
+        this.orderedRowKeys().forEach(rowKey => {
+            rowNo += 1 ;
+            this.grid[rowKey]={}
+            this.orderedColumnKeys().forEach(columnKey => {
+                colNo +=1 ;
+                let id = this.generateId(rowNo, colNo);
+                this.grid[rowKey][columnKey]={id:id, taskList:[]};
+            });
+            colNo = -1 ;
+        });
+    }
 
     addValue = (rowValue, columnValue, taskProps, teamEstimate)=>{
-        // add to columnKeys & rowKeys
-        this.columnKeys.add(columnValue);
-        this.rowKeys.add(rowValue);
-
+        // Initialize should have been called before
         let task = new Task(taskProps,teamEstimate);
-        let taskList = [] ;
-
-        if(!this.grid[rowValue]){
-            //Row does not exist
-
-            this.grid[rowValue] ={};
-            taskList = [task];
-            this.grid[rowValue][columnValue] = taskList ;
-        }else{
-            // Extract existing list 
-            taskList = this.grid[rowValue][columnValue] = taskList ;
-
-            if(!taskList){
-                taskList = [task];
-                this.grid[rowValue][columnValue] = taskList ;
-            }else{
-                taskList.push(task);
-            }
-
-        }
+        this.grid[rowValue][columnValue].taskList.push(task);
     }
 
     addTeamCapacity(teamName, avlCapacity, rtbCapacity){

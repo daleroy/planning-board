@@ -1,5 +1,6 @@
 import DataProvider from "./DataProvider.js"
 import PlanGridData from "./PlanGridData.js";
+import Util from '../ds/Util';
 
 export default class PlanGridDataProcessor {
     constructor(){
@@ -24,6 +25,8 @@ export default class PlanGridDataProcessor {
     setTeamCapacity = (data) => {
         this.teamRawData = data ;
     }
+
+    
 
     async processTeamCapacityData(){
         let dataProvider = DataProvider.getTeamCapacityProvider();
@@ -51,17 +54,24 @@ export default class PlanGridDataProcessor {
     async processTaskData(){
         let dataProvider = DataProvider.getTasksProvider()
         await dataProvider.processCsvData(this.setTaskData);
-        console.log("Grid Data Processor");
-        // console.log(this.papaData);
+
         let csvTable = this.taskRawData.data ;
         let headers = csvTable[0];
-        console.log(headers);
 
         let rowIndex = headers.indexOf(this.props.rowKey);
         let columnIndex = headers.indexOf(this.props.columnKey);
         let rowCount = this.taskRawData.data.length;
         let columnCount = headers.length ;
 
+        //Remove header row
+        let csvTableMinusHeader = csvTable.slice(1);
+        
+        console.log('Before Initialize = '+ csvTableMinusHeader);    
+        let rowValues = Util.extractColumn(csvTableMinusHeader,rowIndex);
+        console.log('rowValues'+ rowValues);
+        let columnValues = Util.extractColumn(csvTableMinusHeader, columnIndex);
+        console.log('columnValues'+ columnValues);
+        this.planGridData.initialize(rowValues, columnValues);
 
         for (let i = 1; i < rowCount ; ++i) {
             let pivotRowValue ;
