@@ -26,7 +26,12 @@ export default class PlanGridDataProcessor {
         this.teamRawData = data ;
     }
 
-    
+    async process(){
+        await this.processTaskData();
+        await this.processTeamCapacityData();
+
+        return Promise.resolve(this.planGridData)
+    }
 
     async processTeamCapacityData(){
         let dataProvider = DataProvider.getTeamCapacityProvider();
@@ -65,8 +70,8 @@ export default class PlanGridDataProcessor {
 
         //Remove header row
         let csvTableMinusHeader = csvTable.slice(1);
-        
-        console.log('Before Initialize = '+ csvTableMinusHeader);    
+
+        console.log('Before Initialize = '+ csvTableMinusHeader);
         let rowValues = Util.extractColumn(csvTableMinusHeader,rowIndex);
         console.log('rowValues'+ rowValues);
         let columnValues = Util.extractColumn(csvTableMinusHeader, columnIndex);

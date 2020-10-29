@@ -1,4 +1,4 @@
-import React , { useState, useEffect} from 'react';
+import React , {useEffect} from 'react';
 import PlanGridDataProcessor from '../state/PlanGridDataProcessor';
 import {DragDropContext} from 'react-beautiful-dnd';
 import styled from 'styled-components';
@@ -33,10 +33,7 @@ border: 1px solid black;
 const getGridData = () => {
     let dataProcessor = PlanGridDataProcessor.getProcessor() ;
 
-    return Promise.all([
-        dataProcessor.processTeamCapacityData(),
-        dataProcessor.processTaskData()
-    ]);
+    return dataProcessor.process();
 }
 
 
@@ -45,13 +42,17 @@ export default function TopToolBar() {
     const [gridData, setGridData] = React.useState({});
     useEffect(() => {
         getGridData().then(data => {
-            window.gridData = data[0]
-            setGridData(data[0])
+            window.gridData = data;
+            setGridData(data)
         });
     }, []);
 
     const onDragEnd = result => {
         const {destination, source, draggableId} = result ;
+
+        if (!destination || !source || !draggableId) {
+            return
+        }
 
         gridData.handleMove(draggableId, source.droppableId, destination.droppableId);
     }
