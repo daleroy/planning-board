@@ -35,8 +35,8 @@ const getGridData = () => {
   let dataProcessor = PlanGridDataProcessor.getProcessor() ;
 
   return Promise.all([
-      dataProcessor.processTaskData(),
-      dataProcessor.processTeamCapacityData()
+      dataProcessor.processTeamCapacityData(),
+      dataProcessor.processTaskData()
   ]);
 }
 

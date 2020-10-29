@@ -1,5 +1,6 @@
 import Task from "./Task.js";
 import UniqueSortedSet from "../ds/UniqueSortedSet.js"
+import Util from '../ds/Util'
 
 export default class PlanGridData {
     constructor(){
@@ -7,6 +8,9 @@ export default class PlanGridData {
         this.teamCapacity = {};
         this.columnKeys = new UniqueSortedSet();
         this.rowKeys = new UniqueSortedSet();
+        this.cellIdToKeyMap = new Map();
+        this.taskMaster = new Map();
+        this.teamCapacitySummary = new Map();
 
     }
 
@@ -41,16 +45,77 @@ export default class PlanGridData {
             this.orderedColumnKeys().forEach(columnKey => {
                 colNo +=1 ;
                 let id = this.generateId(rowNo, colNo);
+                this.cellIdToKeyMap.set(id, {rowKey:rowKey, columnKey:columnKey});
                 this.grid[rowKey][columnKey]={id:id, taskList:[]};
             });
             colNo = -1 ;
         });
+
+        //Initialize capacity summary for each column
+
+        this.orderedColumnKeys().forEach(columnKey => {
+            this.teamCapacitySummary[columnKey] = new Map();
+        });
     }
 
-    addValue = (rowValue, columnValue, taskProps, teamEstimate)=>{
+    addValue = (rowKey, columnKey, taskProps, teamEstimate)=>{
         // Initialize should have been called before
         let task = new Task(taskProps,teamEstimate);
-        this.grid[rowValue][columnValue].taskList.push(task);
+        this.taskMaster.set(task.id, task);
+        this.grid[rowKey][columnKey].taskList.push(task);
+        this.handleAddCell(rowKey, columnKey, task);
+    }
+
+    handleAddCell = (rowKey, colKey, task)=>{
+        this.summarizeTeamEstimates(Util.adder, rowKey, colKey, task);
+    };
+
+    handleMove = (taskId, fromCellId, toCellId)=>{
+        // get task
+        let task = this.task.get(taskId);
+        
+        //Remove from previous location
+        const [removedRowKey,removedColKey] = this.keyForCell(fromCellId);
+        let tasksAtPrevLocation = this.grid[removedRowKey][removedColKey].taskList ;
+        Util.removeItem(tasksAtPrevLocation, taskId);
+        this.summarizeTeamEstimates(Util.substractor, removedRowKey, removedColKey, task);
+        
+        const [targetRowKey, targetColKey] = this.keyForCell(toCellId);
+        let tasksAtTargetLocation = this.grid[targetRowKey][targetColKey].taskList ;
+        tasksAtTargetLocation.push(task);
+        this.summarizeTeamEstimates(Util.adder, targetRowKey, targetColKey,task);
+    }
+
+    
+
+    summarizeTeamEstimates = (aggFn, rowKey, colKey, task)=>{
+        let teamSummaryForCol = this.teamCapacitySummary[colKey];
+        let teamEstimates = task.teamEstimates
+        if(!teamEstimates) return ;
+        for(const [team, estimate] of Object.entries(teamEstimates)){
+            let newTotalEstimate ;
+            if(teamSummaryForCol.has(team)){
+                let currTeamSummaryRow  = teamSummaryForCol.get(team);
+                newTotalEstimate = aggFn(currTeamSummaryRow.totalEstimate,estimate) ;
+            }else{
+                newTotalEstimate = aggFn(0,estimate) ; 
+            }
+            let capacityRow = this.teamCapacity[team];
+            let pendingCapacity = capacityRow.netCapacity - newTotalEstimate ;
+            let teamSummaryRow = {...capacityRow, totalEstimate:newTotalEstimate, pendingCapacity: pendingCapacity};
+            teamSummaryForCol.set(team, teamSummaryRow);
+        }
+    }
+
+
+
+
+
+    keyForCell(cellId) {
+        let keyMap = this.cellIdToKeyMap.get(cellId);
+        let removedRowKey = keyMap.rowKey;
+        let removedColKey = keyMap.colKey;
+        return [removedRowKey, removedColKey];
     }
 
     addTeamCapacity(teamName, avlCapacity, rtbCapacity){
