@@ -57,25 +57,13 @@ export default function TopToolBar() {
         });
     }
 
-    const getRowFromGrid = (rowId, columnKeys, grid) => {
-        const rowValues = grid[rowId];
-
-        columnKeys.forEach((rowId) => {
-            if (!rowValues.hasOwnProperty(rowId)) {
-                rowValues[rowId] = []
-            }
-        });
-
-        return rowValues;
-    }
-
     const renderRow = (rowValues, columnKeys) => {
         return columnKeys.map((colId) => {
-            const tasks = rowValues[colId];
+            const {taskList} = rowValues[colId];
 
 
             return (<Row>
-                {tasks.map((task) => {
+                {taskList.map((task) => {
                     return (<ColumnContainer>{task.mfProps.ref}</ColumnContainer>);
                 })}
             </Row>)
@@ -88,7 +76,7 @@ export default function TopToolBar() {
         }
 
         return rowKeys.orderedValues.map((rowId) => {
-            const rowValues = getRowFromGrid(rowId, columnKeys.orderedValues, grid);
+            const rowValues = grid[rowId];
             const rows = renderRow(rowValues, columnKeys.orderedValues);
             return (
                 <RowContainer >
