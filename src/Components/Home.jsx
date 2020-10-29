@@ -45,6 +45,7 @@ export default function TopToolBar() {
     const [gridData, setGridData] = React.useState({});
     useEffect(() => {
         getGridData().then(data => {
+            window.gridData = data[0]
             setGridData(data[0])
         });
     }, []);
@@ -60,8 +61,8 @@ export default function TopToolBar() {
             return
         }
 
-        return columnKeys.orderedValues.map((id) => {
-            return (<Header>{id}</Header>);
+        return columnKeys.orderedValues.map((id, index) => {
+            return (<Header key={index}>{id}</Header>);
         });
     }
 
@@ -72,15 +73,16 @@ export default function TopToolBar() {
 
 
             return (
-                <Droppable droppableId={id}>
+                <Droppable droppableId={id} key={id}>
                     {(provided)=>(
 
                         <Row ref={provided.innerRef} {...provided.droppableProps}>
+                            {provided.placeholder}
                             {taskList.map((task, index) => {
                                 return (
-                                    <Draggable draggableId={task.id} index={index}>
+                                    <Draggable draggableId={task.id} index={index} key={task.id}>
                                         {(provided) => (
-                                            <TaskContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>{task.mfProps.master_feature}</TaskContainer>
+                                            <TaskContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} key={index}>{task.mfProps.master_feature}</TaskContainer>
                                         )}
                                     </Draggable>
                                 );
@@ -97,11 +99,11 @@ export default function TopToolBar() {
                 return
             }
 
-            return rowKeys.orderedValues.map((rowId) => {
+            return rowKeys.orderedValues.map((rowId, index) => {
                 const rowValues = grid[rowId];
                 const rows = renderRow(rowValues);
                 return (
-                    <RowContainer>
+                    <RowContainer key={index}>
                         <RowId>{rowId}</RowId>
                         {rows}
                     </RowContainer >
