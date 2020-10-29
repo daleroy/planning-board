@@ -52,7 +52,7 @@ export default function TopToolBar() {
     const onDragEnd = result => {
         const {destination, source, draggableId} = result ;
 
-        gridData.handleMove(/*taskId, fromCellId, toCellId*/)
+        gridData.handleMove(draggableId, source.droppableId, destination.droppableId);
     }
 
     const renderColumnHeaders = ({columnKeys}) => {
@@ -65,19 +65,20 @@ export default function TopToolBar() {
         });
     }
 
-    const renderRow = (rowValues, columnKeys) => {
-        return columnKeys.map((colId) => {
-            const {taskList} = rowValues[colId];
+    const renderRow = (rowValues) => {
+        const columnKeys = Object.keys(rowValues);
+        return columnKeys.map((colName) => {
+            const {id, taskList} = rowValues[colName];
 
 
             return (
-                <Droppable droppableId={`${Math.random()}`}>
+                <Droppable droppableId={id}>
                     {(provided)=>(
 
                         <Row ref={provided.innerRef} {...provided.droppableProps}>
                             {taskList.map((task, index) => {
                                 return (
-                                    <Draggable draggableId={task.mfProps.ref} index={index}>
+                                    <Draggable draggableId={task.id} index={index}>
                                         {(provided) => (
                                             <TaskContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>{task.mfProps.master_feature}</TaskContainer>
                                         )}
@@ -91,14 +92,14 @@ export default function TopToolBar() {
             })
         }
 
-        const renderRows = ({columnKeys, rowKeys, grid}) => {
+        const renderRows = ({rowKeys, grid}) => {
             if (!rowKeys) {
                 return
             }
 
             return rowKeys.orderedValues.map((rowId) => {
                 const rowValues = grid[rowId];
-                const rows = renderRow(rowValues, columnKeys.orderedValues);
+                const rows = renderRow(rowValues);
                 return (
                     <RowContainer>
                         <RowId>{rowId}</RowId>
