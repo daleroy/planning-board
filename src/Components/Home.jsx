@@ -9,21 +9,22 @@ const Container = styled.div`
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
-
 `;
 
 const ColumnContainer = styled.h4`
     flex: 1 1 10px;
+    border: 1px dashed red;
 `;
 
 const RowContainer = styled.div`
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 `;
 
 const Row = styled.h1`
-    flex: 1 1 160px;
-`
+    flex: 1 1 20%;
+    border: 1px solid black;
+`;
 
 const getGridData = () => {
   let dataProcessor = PlanGridDataProcessor.getProcessor() ;
@@ -34,16 +35,7 @@ const getGridData = () => {
   ]);
 }
 
-const renderRow = ({grid}) => {
-    if (!grid) {
-        return
-    }
-    const initiatives = Object.keys(grid);
 
-    return initiatives.map((id) => {
-        return (<ColumnContainer>{id}</ColumnContainer>);
-    });
-}
 
 export default function TopToolBar() {
     const [gridData, setGridData] = React.useState({});
@@ -55,21 +47,66 @@ export default function TopToolBar() {
 
     const onDragEnd = result => { }
 
+    const renderColumnHeaders = ({columnKeys}) => {
+        if (!columnKeys) {
+            return
+        }
+
+        return columnKeys.orderedValues.map((id) => {
+            return (<Row>{id}</Row>);
+        });
+    }
+
+    const getRowFromGrid = (rowId, columnKeys, grid) => {
+        const rowValues = grid[rowId];
+
+        columnKeys.forEach((rowId) => {
+            if (!rowValues.hasOwnProperty(rowId)) {
+                rowValues[rowId] = []
+            }
+        });
+
+        return rowValues;
+    }
+
+    const renderRow = (rowValues, columnKeys) => {
+        return columnKeys.map((colId) => {
+            const tasks = rowValues[colId];
+
+
+            return (<Row>
+                {tasks.map((task) => {
+                    return (<ColumnContainer>{task.mfProps.ref}</ColumnContainer>);
+                })}
+            </Row>)
+        })
+    }
+
+    const renderRows = ({columnKeys, rowKeys, grid}) => {
+        if (!rowKeys) {
+            return
+        }
+
+        return rowKeys.orderedValues.map((rowId) => {
+            const rowValues = getRowFromGrid(rowId, columnKeys.orderedValues, grid);
+            const rows = renderRow(rowValues, columnKeys.orderedValues);
+            return (
+                <RowContainer >
+                    <Row>{rowId}</Row>
+                    {rows}
+                </RowContainer >
+            );
+        });
+    }
 
     console.dir(gridData);
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <RowContainer >
                 <Row>Initatives</Row>
-                <Row>Q1</Row>
-                <Row>Q2</Row>
-                <Row>Q3</Row>
-                <Row>Q4</Row>
+                {renderColumnHeaders(gridData)}
             </RowContainer >
-            <Container >
-                    {renderRow(gridData)}
-            </Container >
-
+            {renderRows(gridData)}
         </DragDropContext>
     )
 }
