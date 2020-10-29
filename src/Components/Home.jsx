@@ -1,43 +1,42 @@
 import React , { useState, useEffect} from 'react';
-import {GridDataContext} from '../App';
 import PlanGridDataProcessor from '../state/PlanGridDataProcessor';
 import {DragDropContext} from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
 
 const TaskContainer = styled.div`
-    flex: 1 1 10px;
-    background-color: #f0f8ff;
-    border: 1px solid #d8e8f8;
-    font-size: 14px;
+flex: 1 1 10px;
+background-color: #f0f8ff;
+border: 1px solid #d8e8f8;
+font-size: 14px;
 `;
 
 const RowContainer = styled.div`
-    display: flex;
-    flex-wrap: nowrap;
+display: flex;
+flex-wrap: nowrap;
 `;
 
 const RowId = styled.div`
-    font-size: 18px;
-    flex: 1 1 20%;
-    border: 1px solid black;
+font-size: 18px;
+flex: 1 1 20%;
+border: 1px solid black;
 `
 const Row = styled.div`
-    flex: 1 1 20%;
-    border: 1px solid black;
+flex: 1 1 20%;
+border: 1px solid black;
 `;
 const Header = styled.h3`
-    flex: 1 1 20%;
-    border: 1px solid black;
+flex: 1 1 20%;
+border: 1px solid black;
 `;
 
 const getGridData = () => {
-  let dataProcessor = PlanGridDataProcessor.getProcessor() ;
+    let dataProcessor = PlanGridDataProcessor.getProcessor() ;
 
-  return Promise.all([
-      dataProcessor.processTeamCapacityData(),
-      dataProcessor.processTaskData()
-  ]);
+    return Promise.all([
+        dataProcessor.processTeamCapacityData(),
+        dataProcessor.processTaskData()
+    ]);
 }
 
 
@@ -50,7 +49,11 @@ export default function TopToolBar() {
         });
     }, []);
 
-    const onDragEnd = result => { }
+    const onDragEnd = result => {
+        const {destination, source, draggableId} = result ;
+
+        gridData.handleMove(/*taskId, fromCellId, toCellId*/)
+    }
 
     const renderColumnHeaders = ({columnKeys}) => {
         if (!columnKeys) {
@@ -67,50 +70,52 @@ export default function TopToolBar() {
             const {taskList} = rowValues[colId];
 
 
-            return (<Row>
-                {taskList.map((task, index) => {
-                    return (
-                        <Draggable draggableId={task.mfProps.ref} index={index}>
-                            {(provided) => (
-                                <TaskContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>{task.mfProps.master_feature}</TaskContainer>
-                            )}
-                        </Draggable>
-                    );
-                })}
-            </Row>)
-        })
-    }
-
-    const renderRows = ({columnKeys, rowKeys, grid}) => {
-        if (!rowKeys) {
-            return
-        }
-
-        return rowKeys.orderedValues.map((rowId) => {
-            const rowValues = grid[rowId];
-            const rows = renderRow(rowValues, columnKeys.orderedValues);
             return (
                 <Droppable droppableId={`${Math.random()}`}>
                     {(provided)=>(
-                    <RowContainer ref={provided.innerRef} {...provided.droppableProps}>
+
+                        <Row ref={provided.innerRef} {...provided.droppableProps}>
+                            {taskList.map((task, index) => {
+                                return (
+                                    <Draggable draggableId={task.mfProps.ref} index={index}>
+                                        {(provided) => (
+                                            <TaskContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>{task.mfProps.master_feature}</TaskContainer>
+                                        )}
+                                    </Draggable>
+                                );
+                            })}
+                        </Row>
+                    )}
+
+                </Droppable>)
+            })
+        }
+
+        const renderRows = ({columnKeys, rowKeys, grid}) => {
+            if (!rowKeys) {
+                return
+            }
+
+            return rowKeys.orderedValues.map((rowId) => {
+                const rowValues = grid[rowId];
+                const rows = renderRow(rowValues, columnKeys.orderedValues);
+                return (
+                    <RowContainer>
                         <RowId>{rowId}</RowId>
                         {rows}
                     </RowContainer >
-                )}
+                );
+            });
+        }
 
-                </Droppable>
-            );
-        });
+        console.dir(gridData);
+        return (
+            <DragDropContext onDragEnd={onDragEnd}>
+                <RowContainer >
+                    <Header>Initatives</Header>
+                    {renderColumnHeaders(gridData)}
+                </RowContainer >
+                {renderRows(gridData)}
+            </DragDropContext>
+        )
     }
-
-    console.dir(gridData);
-    return (
-        <DragDropContext onDragEnd={onDragEnd}>
-            <RowContainer >
-                <Header>Initatives</Header>
-                {renderColumnHeaders(gridData)}
-            </RowContainer >
-            {renderRows(gridData)}
-        </DragDropContext>
-    )
-}
