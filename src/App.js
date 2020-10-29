@@ -1,7 +1,6 @@
 import './App.css';
 import styled from 'styled-components';
 import DataImporter from './DataImporter';
-import DataProvider from './state/DataProvider';
 import PlanGridDataProcessor from './state/PlanGridDataProcessor';
 
 const Container = styled.div`
@@ -23,7 +22,7 @@ const getGridData = () => {
 
 
 export default function App() {
-  let gridData = getGridData();
+  getGridData();
   return (
     <Container>
       <DataImporter callback={processData}/>

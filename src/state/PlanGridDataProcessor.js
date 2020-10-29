@@ -37,7 +37,6 @@ export default class PlanGridDataProcessor {
         let avlCapIndex = headers.indexOf(this.props.capacity.available);
         let rtbCapIndex = headers.indexOf(this.props.capacity.rtb);
         let rowCount = csvTable.length;
-        let columnCount = headers.length ;
 
         for (let i = 1; i < rowCount ; ++i) {
             let teamName = csvTable[i][teamIndex];

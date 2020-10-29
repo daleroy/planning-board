@@ -1,13 +1,21 @@
 import Task from "./Task.js";
+import UniqueSortedSet from "../ds/UniqueSortedSet.js"
 
 export default class PlanGridData {
     constructor(){
         this.grid = {};
         this.teamCapacity = {};
+        this.columnKeys = new UniqueSortedSet();
+        this.rowKeys = new UniqueSortedSet();
+
     }
 
 
     addValue = (rowValue, columnValue, taskProps, teamEstimate)=>{
+        // add to columnKeys & rowKeys
+        this.columnKeys.add(columnValue);
+        this.rowKeys.add(rowValue);
+
         let task = new Task(taskProps,teamEstimate);
         let taskList = [] ;
 
