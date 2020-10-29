@@ -72,7 +72,7 @@ export default function TopToolBar() {
                     return (
                         <Draggable draggableId={task.mfProps.ref} index={index}>
                             {(provided) => (
-                                <TaskContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>{task.mfProps.ref}</TaskContainer>
+                                <TaskContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>{task.mfProps.master_feature}</TaskContainer>
                             )}
                         </Draggable>
                     );
