@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/planning-board/static/css/main.ab7136cd.chunk.css",
+    "main.js": "/planning-board/static/js/main.97897929.chunk.js",
+    "main.js.map": "/planning-board/static/js/main.97897929.chunk.js.map",
+    "runtime-main.js": "/planning-board/static/js/runtime-main.b006ed08.js",
+    "runtime-main.js.map": "/planning-board/static/js/runtime-main.b006ed08.js.map",
+    "static/js/2.e8164401.chunk.js": "/planning-board/static/js/2.e8164401.chunk.js",
+    "static/js/2.e8164401.chunk.js.map": "/planning-board/static/js/2.e8164401.chunk.js.map",
+    "static/js/3.15e640b9.chunk.js": "/planning-board/static/js/3.15e640b9.chunk.js",
+    "static/js/3.15e640b9.chunk.js.map": "/planning-board/static/js/3.15e640b9.chunk.js.map",
+    "index.html": "/planning-board/index.html",
+    "static/css/main.ab7136cd.chunk.css.map": "/planning-board/static/css/main.ab7136cd.chunk.css.map",
+    "static/js/2.e8164401.chunk.js.LICENSE.txt": "/planning-board/static/js/2.e8164401.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b006ed08.js",
+    "static/js/2.e8164401.chunk.js",
+    "static/css/main.ab7136cd.chunk.css",
+    "static/js/main.97897929.chunk.js"
+  ]
+}
