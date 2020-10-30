@@ -50,7 +50,7 @@ export default function Home() {
     useEffect(() => {
         getGridData().then(data => {
             window.gridData = data;
-            setGridData(data)
+            setGridData(data);
         });
     }, []);
 
@@ -62,6 +62,7 @@ export default function Home() {
         }
 
         gridData.handleMove(draggableId, source.droppableId, destination.droppableId);
+        setGridData(Object.assign({}, gridData))
     }
 
     const renderColumnHeaders = ({columnKeys}) => {

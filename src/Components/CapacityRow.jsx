@@ -41,8 +41,6 @@ export default function CapacityRow({teamCapacitySummary}) {
                     <div>
                         <div>{teamNameFormatted}</div>
                         <div>Pending Capacity : {pendingCapacity}</div>
-                        <div>Net Capacity : {netCapacity}</div>
-                        <div>Available Capacity : {availableCapacity}</div>
                         <div>Total Estimate : {totalEstimate}</div>
                      </div>
                 </CapacityContainer>
