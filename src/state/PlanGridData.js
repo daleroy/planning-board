@@ -54,7 +54,7 @@ export default class PlanGridData {
         //Initialize capacity summary for each column
 
         this.orderedColumnKeys().forEach(columnKey => {
-            this.teamCapacitySummary[columnKey] = new Map();
+            this.teamCapacitySummary.set(columnKey, new Map());
         });
     }
 
@@ -63,7 +63,7 @@ export default class PlanGridData {
         Util.log('In Add Value');
         Util.logo('rowKey', rowKey);
         Util.logo('teamEstimate', teamEstimate)
-        
+
 
         let task = new Task(taskProps,teamEstimate);
         this.taskMaster.set(task.id, task);
@@ -100,9 +100,9 @@ export default class PlanGridData {
         Util.logo('Column Key ', colKey);
         Util.logo('Task',task);
 
-        let teamSummaryForCol = this.teamCapacitySummary[colKey];
+        let teamSummaryForCol = this.teamCapacitySummary.get(colKey);
         let teamEstimates = task.teamEstimates
-        
+
 
         if(!teamEstimates) return ;
         for(const [team, estimate] of Object.entries(teamEstimates)){

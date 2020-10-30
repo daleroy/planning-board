@@ -1,8 +1,14 @@
 import React , {useEffect} from 'react';
 import PlanGridDataProcessor from '../state/PlanGridDataProcessor';
+import CapacityRow from './CapacityRow';
 import {DragDropContext} from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
+
+const TeamEstimate = styled.div`
+font-size: 12px;
+color: #485757;
+`
 
 const TaskContainer = styled.div`
 flex: 1 1 10px;
@@ -14,9 +20,11 @@ font-size: 14px;
 const RowContainer = styled.div`
 display: flex;
 flex-wrap: nowrap;
+padding: 0 10px 0 10px;
 `;
 
 const RowId = styled.div`
+font-weight: 700;
 font-size: 18px;
 flex: 1 1 20%;
 border: 1px solid black;
@@ -31,13 +39,13 @@ border: 1px solid black;
 `;
 
 const getGridData = () => {
-  let dataProcessor = PlanGridDataProcessor.getProcessor() ;
-  return dataProcessor.process();
+    let dataProcessor = PlanGridDataProcessor.getProcessor() ;
+    return dataProcessor.process();
 }
 
 
 
-export default function TopToolBar() {
+export default function Home() {
     const [gridData, setGridData] = React.useState({});
     useEffect(() => {
         getGridData().then(data => {
@@ -82,7 +90,13 @@ export default function TopToolBar() {
                                 return (
                                     <Draggable draggableId={task.id} index={index} key={task.id}>
                                         {(provided) => (
-                                            <TaskContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} key={index}>{task.mfProps.master_feature}</TaskContainer>
+                                            <TaskContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} key={index}>
+                                                <div>{task.mfProps.master_feature}</div>
+                                                {Object.keys(task.teamEstimates).map((id, index) => {
+                                                        return <TeamEstimate key={index}>{id} : {task.teamEstimates[id]}</TeamEstimate>
+                                                })}
+
+                                            </TaskContainer>
                                         )}
                                     </Draggable>
                                 );
@@ -113,12 +127,15 @@ export default function TopToolBar() {
 
         console.dir(gridData);
         return (
-            <DragDropContext onDragEnd={onDragEnd}>
-                <RowContainer >
-                    <Header>Initatives</Header>
-                    {renderColumnHeaders(gridData)}
-                </RowContainer >
-                {renderRows(gridData)}
-            </DragDropContext>
+            <React.Fragment>
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <RowContainer >
+                        <Header>Initatives</Header>
+                        {renderColumnHeaders(gridData)}
+                    </RowContainer >
+                    {renderRows(gridData)}
+                </DragDropContext>
+                <CapacityRow teamCapacitySummary={gridData.teamCapacitySummary}/>
+            </React.Fragment>
         )
     }
