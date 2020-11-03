@@ -65,7 +65,7 @@ export default function Home() {
             Util.logDebug(c_name, m_name, 'After data fetch', data.teamCapacitySummary);
             setTaskRawData(PlanGridDataProcessor.getProcessor().taskRawData.data);
         });
-    });
+    },[]);
 
     const onDragEnd = result => {
         const {destination, source, draggableId} = result ;

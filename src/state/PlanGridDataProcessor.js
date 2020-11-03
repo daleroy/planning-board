@@ -148,6 +148,9 @@ export default class PlanGridDataProcessor {
     }
 
     static getProcessor(){
-        return new PlanGridDataProcessor(); 
+        if(!PlanGridDataProcessor.PROCESSOR){
+            PlanGridDataProcessor.PROCESSOR = new PlanGridDataProcessor();
+        }
+        return PlanGridDataProcessor.PROCESSOR; 
     }
 }
