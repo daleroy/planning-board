@@ -2,8 +2,13 @@ import DataProvider from "./DataProvider.js"
 import PlanGridData from "./PlanGridData.js";
 import Util from '../ds/Util';
 
+
+
 export default class PlanGridDataProcessor {
+    static PROCESSOR;
     constructor(){
+        this.CLASS_NAME = ' PlanGridDataProcessor:' ;
+
         this.props = {};
         //TODO: Fix props key consistency
 
@@ -19,33 +24,44 @@ export default class PlanGridDataProcessor {
     }
 
     setTaskData = (data) => {
-        console.log("Setting Task Data");
         this.taskRawData = data ;
     }
 
     setTeamCapacity = (data) => {
-        console.log("Setting Team Capacity");
         this.teamRawData = data ;
     }
 
     async process(){
+        const METHOD_NAME = 'process' ;
+        await this.processTeamCapacityData();
+        await this.processTaskData();
+
+        this.translate();
+
+        return Promise.resolve(this.planGridData);
+    }
+
+    async processAll(){
+        const METHOD_NAME = 'processAll' ;
         await this.processTeamCapacityData();
         await this.processTaskData();
         this.translate();
-        console.log(this.planGridData);
-        return Promise.resolve(this.planGridData);
+
+        let dataCollection = {planGrid: this.planGridData, teamCapacity: this.teamRawData.data, taskRawData: this.taskRawData.data};
+
+        return Promise.resolve(dataCollection);
     }
 
     async processTeamCapacityData(){
         let dataProvider = DataProvider.getTeamCapacityProvider();
         await dataProvider.processCsvData(this.setTeamCapacity)
-        console.log("Done processing team Capacity Data");
+        // console.log("Done processing team Capacity Data");
     }
 
     async processTaskData(){
         let dataProvider = DataProvider.getTasksProvider();
         await dataProvider.processCsvData(this.setTaskData);
-        console.log("Done processing team task Data");
+        // console.log("Done processing team task Data");
     }
 
     translate(){
@@ -132,6 +148,6 @@ export default class PlanGridDataProcessor {
     }
 
     static getProcessor(){
-        return new PlanGridDataProcessor();
+        return new PlanGridDataProcessor(); 
     }
 }

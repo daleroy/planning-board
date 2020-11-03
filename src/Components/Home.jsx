@@ -1,9 +1,11 @@
-import React , {useEffect} from 'react';
+import React , {useEffect, useState} from 'react';
 import PlanGridDataProcessor from '../state/PlanGridDataProcessor';
 import CapacityRow from './CapacityRow';
 import {DragDropContext} from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
+import GridView from './GridView'
+import Util from '../ds/Util'
 
 const TeamEstimate = styled.div`
 font-size: 12px;
@@ -38,21 +40,32 @@ flex: 1 1 20%;
 border: 1px solid black;
 `;
 
+const EmptyDiv = styled.div`
+    padding:20px ;
+`;
+
+const c_name = 'Home';
+
 const getGridData = () => {
     let dataProcessor = PlanGridDataProcessor.getProcessor() ;
     return dataProcessor.process();
 }
 
-
-
 export default function Home() {
     const [gridData, setGridData] = React.useState({});
+    const [taskRawData, setTaskRawData] = React.useState({});
+
     useEffect(() => {
+        const m_name = 'useEffect';
+        Util.logDebug(c_name, m_name, 'Inside..', gridData);
         getGridData().then(data => {
+            const m_name = 'useEffect' ;
             window.gridData = data;
             setGridData(data);
+            Util.logDebug(c_name, m_name, 'After data fetch', data.teamCapacitySummary);
+            setTaskRawData(PlanGridDataProcessor.getProcessor().taskRawData.data);
         });
-    }, []);
+    });
 
     const onDragEnd = result => {
         const {destination, source, draggableId} = result ;
@@ -126,7 +139,9 @@ export default function Home() {
             });
         }
 
-        console.dir(gridData);
+        // console.dir(gridData);
+        Util.logDebug(c_name, 'Render', 'Grid Data', gridData);
+        Util.logDebug(c_name, 'Render', 'task raw data ', taskRawData);
         return (
             <React.Fragment>
                 <DragDropContext onDragEnd={onDragEnd}>
@@ -137,6 +152,8 @@ export default function Home() {
                     {renderRows(gridData)}
                 </DragDropContext>
                 <CapacityRow teamCapacitySummary={gridData.teamCapacitySummary}/>
+                <EmptyDiv/>
+                <GridView csvValues = {taskRawData} ></GridView>
             </React.Fragment>
         )
     }

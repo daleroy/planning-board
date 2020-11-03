@@ -3,6 +3,8 @@ import UniqueSortedSet from "../ds/UniqueSortedSet.js"
 import Util from '../ds/Util'
 
 export default class PlanGridData {
+
+
     constructor(){
         this.grid = {};
         this.teamCapacity = {};
@@ -11,6 +13,7 @@ export default class PlanGridData {
         this.cellIdToKeyMap = new Map();
         this.taskMaster = new Map();
         this.teamCapacitySummary = new Map();
+        this.c_name = 'PlanGridData'; 
 
     }
 
@@ -54,16 +57,16 @@ export default class PlanGridData {
         //Initialize capacity summary for each column
 
         this.orderedColumnKeys().forEach(columnKey => {
-            this.teamCapacitySummary.set(columnKey, new Map());
+            this.teamCapacitySummary.set(columnKey,new Map());
         });
     }
 
     addValue = (rowKey, columnKey, taskProps, teamEstimate)=>{
+        const m_name = 'addValue' ;
         // Initialize should have been called before
-        Util.log('In Add Value');
-        Util.logo('rowKey', rowKey);
-        Util.logo('teamEstimate', teamEstimate)
-
+        Util.logDebug(this.c_name, m_name, 'In Add Value', 'In Add Value');
+        Util.logDebug(this.c_name, m_name, 'rowKey', rowKey);
+        Util.logDebug(this.c_name, m_name, 'teamEstimate', teamEstimate);
 
         let task = new Task(taskProps,teamEstimate);
         this.taskMaster.set(task.id, task);
@@ -95,14 +98,10 @@ export default class PlanGridData {
 
 
     summarizeTeamEstimates = (aggFn, rowKey, colKey, task)=>{
-        Util.log('In Summarize');
-        Util.logo('Row Key ', rowKey);
-        Util.logo('Column Key ', colKey);
-        Util.logo('Task',task);
 
         let teamSummaryForCol = this.teamCapacitySummary.get(colKey);
         let teamEstimates = task.teamEstimates
-
+        
 
         if(!teamEstimates) return ;
         for(const [team, estimate] of Object.entries(teamEstimates)){
@@ -119,10 +118,6 @@ export default class PlanGridData {
             teamSummaryForCol.set(team, teamSummaryRow);
         }
     }
-
-
-
-
 
     keyForCell(cellId) {
         let keyMap = this.cellIdToKeyMap.get(cellId);

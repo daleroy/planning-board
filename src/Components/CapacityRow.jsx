@@ -1,5 +1,6 @@
 import React , {useEffect} from 'react';
 import styled from 'styled-components';
+import Util from '../ds/Util';
 
 const RowContainer = styled.div`
 display: flex;
@@ -17,9 +18,15 @@ font-size: 14px;
 border: 1px solid #d8e8f8;
 `;
 
+const c_name = 'Capacity Row';
+
 export default function CapacityRow({teamCapacitySummary}) {
+    const m_name = 'Capacity Row'
 
     const renderCapacityCell = (capacityObj, quarter) => {
+        const m_name = 'renderCapacityCell';
+        Util.logDebug(c_name, m_name, 'renderCapacityCell', capacityObj);
+
         const retVal = [];
 
         capacityObj.forEach((teamCapacity, key) => {
@@ -52,14 +59,19 @@ export default function CapacityRow({teamCapacitySummary}) {
     }
 
     const renderCapacityRow = (teamCapacitySummary) => {
+        const m_name = 'renderCapacityRow';
+
+        Util.logDebug(c_name, m_name, 'renderCapacityRow:64', teamCapacitySummary);
+
         const retVal = []
 
         if (!teamCapacitySummary) {
+            Util.logDebug(c_name, m_name, 'renderCapacityRow', 'returning back');
             return retVal;
         }
 
         teamCapacitySummary.forEach((capacityObj, key) =>{
-
+            Util.logDebug(c_name, m_name, 'inside for each', capacityObj);
             retVal.push(<Row key={key}>{renderCapacityCell(capacityObj, key)}</Row>);
         });
 

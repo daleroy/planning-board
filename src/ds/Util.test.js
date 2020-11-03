@@ -11,3 +11,15 @@ test('unique values', () => {
     expect(secondCol[1]).toBe(5);
     expect(secondCol[2]).toBe(8);
   });
+
+  test('Table to Json ',()=>{
+    let header = ['ab', 'bc', 'de.rg'];
+    let rows =[[1,2,3], 
+               [4,5,6] 
+              ];
+    let jsonStuff = Util.tableToTupleArray(rows, header);
+    console.log(jsonStuff);
+    expect(jsonStuff[0]['ab']).toBe(1);
+    expect(jsonStuff[0]['de.rg']).toBe(3);
+
+  });

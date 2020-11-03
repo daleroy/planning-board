@@ -1290,8 +1290,8 @@
 
 "@material-ui/core@^4.11.0":
   version "4.11.0"
-  resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/@material-ui/core/-/core-4.11.0.tgz#b69b26e4553c9e53f2bfaf1053e216a0af9be15a"
-  integrity sha1-tpsm5FU8nlPyv68QU+IWoK+b4Vo=
+  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.11.0.tgz#b69b26e4553c9e53f2bfaf1053e216a0af9be15a"
+  integrity sha512-bYo9uIub8wGhZySHqLQ833zi4ZML+XCBE1XwJ8EuUVSpTWWG57Pm+YugQToJNFsEyiKFhPh8DPD0bgupz8n01g==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@material-ui/styles" "^4.10.0"
@@ -1305,6 +1305,14 @@
     prop-types "^15.7.2"
     react-is "^16.8.0"
     react-transition-group "^4.4.0"
+
+"@material-ui/data-grid@^4.0.0-alpha.8":
+  version "4.0.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@material-ui/data-grid/-/data-grid-4.0.0-alpha.8.tgz#4ab97dc3cb5529635019d82425fe62ce8b0d26bb"
+  integrity sha512-YnrZKYMpBKReykuis61bTH7rBHUyrBfsNzWsXqDy0iuOTM8zwsz4fGryMwrAj58RUbwfge703AxaItfjsy35kw==
+  dependencies:
+    prop-types "^15.7.2"
+    tslib "^2.0.0"
 
 "@material-ui/icons@^4.9.1":
   version "4.9.1"
@@ -2154,6 +2162,18 @@ adjust-sourcemap-loader@3.0.0:
   dependencies:
     loader-utils "^2.0.0"
     regex-parser "^2.2.11"
+
+ag-grid-community@^24.1.0:
+  version "24.1.0"
+  resolved "https://registry.yarnpkg.com/ag-grid-community/-/ag-grid-community-24.1.0.tgz#1e3cab51211822e08d56f03a491b7c0deaa398e6"
+  integrity sha512-pWnWphuDcejZ8ahf6C734EpCx3XQ6dHEZWMWTlCdHNT0mZBLJ4YKCGACX+ttAEtSX2MGM3G13JncvuratUlYag==
+
+ag-grid-react@^24.1.1:
+  version "24.1.1"
+  resolved "https://registry.yarnpkg.com/ag-grid-react/-/ag-grid-react-24.1.1.tgz#56d0086316d262cf6e5804e2b4bdeeb5fb3279b9"
+  integrity sha512-MuITqlVo1QD48DzLFFOcX/8eG7XvezkgqymSJrIo4JI6znAqNRpnRgDt+oFHRDgK1NSDh6rZRXGFZI/DRYWq0A==
+  dependencies:
+    prop-types "^15.6.2"
 
 aggregate-error@^3.0.0:
   version "3.1.0"
@@ -3258,7 +3278,7 @@ clone-deep@^4.0.1:
     kind-of "^6.0.2"
     shallow-clone "^3.0.0"
 
-clsx@^1.0.4:
+clsx@^1.0.4, clsx@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/clsx/-/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
   integrity sha1-mLMTT5q73yOyZjSRrOE8XAOnMYg=
@@ -9204,6 +9224,18 @@ react-beautiful-dnd@^13.0.0:
     redux "^4.0.4"
     use-memo-one "^1.1.1"
 
+react-data-grid@^7.0.0-canary.27:
+  version "7.0.0-canary.27"
+  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-canary.27.tgz#764ca52b7935eb9024339a58ed34af6e1e22f05a"
+  integrity sha512-PQLHeA85j3rvXH4/5eytxT31Xutx5+UPTZpMra85tx/wE++ErWTEjpdL6D+ReV+AcOs+GUzAPh8f1kuehNdawg==
+  dependencies:
+    clsx "^1.1.1"
+
+react-datasheet@^1.4.8:
+  version "1.4.8"
+  resolved "https://registry.yarnpkg.com/react-datasheet/-/react-datasheet-1.4.8.tgz#ce83e62963febce5c7f4efb0aaea50896d4e42db"
+  integrity sha512-ohgGD1uLcJKTzeyubWi1s8VdwjNfBxpAz1x/N+io+6XQB1AIzipW5gXlDTpC7AbSUWRiJPzc4ytd20gU6xAoHw==
+
 react-dev-utils@^11.0.0:
   version "11.0.0"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-11.0.0.tgz#9fdb1b173f4ffc1f23fcf98465d93b16a860b73e"
@@ -10960,6 +10992,11 @@ tslib@^1.10.0, tslib@^1.8.1, tslib@^1.9.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
+
+tslib@^2.0.0:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.0.3.tgz#8e0741ac45fc0c226e58a17bfc3e64b9bc6ca61c"
+  integrity sha512-uZtkfKblCEQtZKBF6EBXVZeQNl82yqtDQdv+eck8u7tdPxjLu2/lp5/uPW+um2tpuxINHWy3GhiccY7QgEaVHQ==
 
 tsutils@^3.17.1:
   version "3.17.1"
