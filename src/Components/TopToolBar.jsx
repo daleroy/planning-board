@@ -54,6 +54,9 @@ export default function TopToolBar() {
                     <NavLink to={'/loadData'}>
                         <MenuItem onClick={handleClose}>Load Data From File</MenuItem>
                     </NavLink>
+                    <NavLink to={'/gridView'}>
+                        <MenuItem onClick={handleClose}>Edit Data in Grid View</MenuItem>
+                    </NavLink>
                 </Menu>
                 <Typography variant="h6" className={classes.title}>
                 </Typography>
