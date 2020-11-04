@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
 import GridView from './GridView'
 import Util from '../ds/Util'
+import useGridData from '../Hooks/useGridData';
 
 const TeamEstimate = styled.div`
 font-size: 12px;
@@ -46,26 +47,10 @@ const EmptyDiv = styled.div`
 
 const c_name = 'Home';
 
-const getGridData = () => {
-    let dataProcessor = PlanGridDataProcessor.getProcessor() ;
-    return dataProcessor.process();
-}
 
-export default function Home() {
-    const [gridData, setGridData] = React.useState({});
-    const [taskRawData, setTaskRawData] = React.useState({});
 
-    useEffect(() => {
-        const m_name = 'useEffect';
-        Util.logDebug(c_name, m_name, 'Inside..', gridData);
-        getGridData().then(data => {
-            const m_name = 'useEffect' ;
-            window.gridData = data;
-            setGridData(data);
-            Util.logDebug(c_name, m_name, 'After data fetch', data.teamCapacitySummary);
-            setTaskRawData(PlanGridDataProcessor.getProcessor().taskRawData.data);
-        });
-    },[]);
+export default function Home(props) {
+    const {gridData, setGridData} = useGridData();
 
     const onDragEnd = result => {
         const {destination, source, draggableId} = result ;
@@ -79,9 +64,6 @@ export default function Home() {
     }
 
     const renderColumnHeaders = ({columnKeys}) => {
-        if (!columnKeys) {
-            return
-        }
 
         return columnKeys.orderedValues.map((id, index) => {
             return (<Header key={index}>{id}</Header>);
@@ -123,9 +105,6 @@ export default function Home() {
         }
 
         const renderRows = ({rowKeys, grid}) => {
-            if (!rowKeys) {
-                return
-            }
 
             return rowKeys.orderedValues.map((rowId, index) => {
                 const rowValues = grid[rowId];
@@ -141,7 +120,7 @@ export default function Home() {
 
         // console.dir(gridData);
         Util.logDebug(c_name, 'Render', 'Grid Data', gridData);
-        Util.logDebug(c_name, 'Render', 'task raw data ', taskRawData);
+        // Util.logDebug(c_name, 'Render', 'task raw data ', taskRawData);
         return (
             <React.Fragment>
                 <DragDropContext onDragEnd={onDragEnd}>
@@ -153,7 +132,6 @@ export default function Home() {
                 </DragDropContext>
                 <CapacityRow teamCapacitySummary={gridData.teamCapacitySummary}/>
                 <EmptyDiv/>
-                <GridView csvValues = {taskRawData} ></GridView>
             </React.Fragment>
         )
     }
