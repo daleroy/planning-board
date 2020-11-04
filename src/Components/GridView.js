@@ -13,7 +13,7 @@ const getGridData = () => {
 }
 
 export default function GridView({csvValues}){
-    const className = 'GridView';
+    const c_name = 'GridView';
     const [header, setHeader] = useState([]);
 
     const [gridApi, setGridApi] = useState(null);
@@ -32,14 +32,19 @@ export default function GridView({csvValues}){
         setGridColumnApi(params.columnApi);
     }
 
+    const onChange =(cellChangeEvent)=>{
+        const m_name = 'onChange';
+        Util.logDebug(c_name, m_name, 'Grid Change', cellChangeEvent);
+    };
+
 
 
     useEffect(() => {
-        Util.logTrace(className, 'useEffect', 'useEffect called', 'useEffectCalled');
+        Util.logTrace(c_name, 'useEffect', 'useEffect called', 'useEffectCalled');
         
         getGridData().then(data => {
             let m_name = 'useEffect';
-            Util.logDebug(className, m_name, 'Inside isIterableCheck',data);
+            Util.logDebug(c_name, m_name, 'Inside isIterableCheck',data);
             let tableValues = data['taskRawData'];
             if(Util.isIterable(tableValues)){
                 const csvClone = [...tableValues];
@@ -54,21 +59,21 @@ export default function GridView({csvValues}){
                 });
 
                 modifiedHeader.forEach(element => {
-                    Util.logDebug(className, m_name, 'header element', element);
+                    Util.logDebug(c_name, m_name, 'header element', element);
                 });
 
                 const rowData = Util.tableToTupleArray(csvRows, modifiedHeader);
                 setRowData(rowData);
-                Util.logDebug(className, m_name, 'Header in isIterable',modifiedHeader);
-                Util.logDebug(className, m_name, 'CsvRows isIterable',csvRows);
-                Util.logDebug(className, m_name, 'Row data in isIterable',rowData);
+                Util.logDebug(c_name, m_name, 'Header in isIterable',modifiedHeader);
+                Util.logDebug(c_name, m_name, 'CsvRows isIterable',csvRows);
+                Util.logDebug(c_name, m_name, 'Row data in isIterable',rowData);
                 const gridColumn = modifiedHeader.map(x=>{return(<AgGridColumn field={x} editable={true}  sortable={true}></AgGridColumn>)})
-                Util.logDebug(className, m_name, 'Grid column in isIterable',gridColumn);
+                Util.logDebug(c_name, m_name, 'Grid column in isIterable',gridColumn);
 
                 for(let [key, value] of Object.entries(rowData[0])){
-                    Util.logDebug(className, m_name, 'row data', key.concat(':').concat(value));
+                    Util.logDebug(c_name, m_name, 'row data', key.concat(':').concat(value));
                 }
-                Util.logDebug(className, m_name, 'Privacy Team Estimate', rowData[0]['team.privacy']);
+                Util.logDebug(c_name, m_name, 'Privacy Team Estimate', rowData[0]['team.privacy']);
 
                 setRowData(rowData);
                 setHeader(modifiedHeader);
@@ -78,8 +83,8 @@ export default function GridView({csvValues}){
 
     return (
         <div className="ag-theme-alpine" style={ { height: 400, width: 1800 } }>
-                <AgGridReact onGridReady={onGridReady} rowData={rowData}>
-                    {header.map(x=>{return (<AgGridColumn field={x} headerName={x} editable={true}  sortable={true}></AgGridColumn>)})}
+                <AgGridReact onGridReady={onGridReady} rowData={rowData} onCellValueChanged={onChange}>
+                    {header.map(x=>{return (<AgGridColumn field={x} headerName={x} editable={true}   sortable={true}></AgGridColumn>)})}
                 </AgGridReact>
         </div>
     );
