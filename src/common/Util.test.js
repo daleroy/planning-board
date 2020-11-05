@@ -18,7 +18,7 @@ test('unique values', () => {
                [4,5,6] 
               ];
     let jsonStuff = Util.tableToTupleArray(rows, header);
-    console.log(jsonStuff);
+    // console.log(jsonStuff);
     expect(jsonStuff[0]['ab']).toBe(1);
     expect(jsonStuff[0]['de.rg']).toBe(3);
 

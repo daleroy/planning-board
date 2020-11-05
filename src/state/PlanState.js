@@ -1,8 +1,8 @@
 import Task from "./Task.js";
 import UniqueSortedSet from "../ds/UniqueSortedSet.js"
-import Util from '../ds/Util'
+import Util from '../common/Util'
 
-export default class PlanGridData {
+export default class PlanState {
 
 
     constructor(){
@@ -15,6 +15,14 @@ export default class PlanGridData {
         this.teamCapacitySummary = new Map();
         this.c_name = 'PlanGridData'; 
 
+    }
+
+    setRawTeamData = (teamRawData)=>{
+        this.teamRawData = teamRawData ;
+    }
+
+    setRawTaskData = (taskRawData)=>{
+        this.taskRawData = taskRawData ;
     }
 
     orderedRowKeys(){

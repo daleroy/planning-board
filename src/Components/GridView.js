@@ -4,8 +4,8 @@ import {GridContext} from '../App.js';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import Util from '../ds/Util';
-import PlanGridDataProcessor from '../state/PlanGridDataProcessor';
+import Util from '../common/Util';
+import PlanGridDataProcessor from '../state/StateInitializer';
 
 const getGridData = () => {
     const dataProcessor = PlanGridDataProcessor.getProcessor() ;

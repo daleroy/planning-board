@@ -1,6 +1,6 @@
 import React , {useEffect} from 'react';
 import styled from 'styled-components';
-import Util from '../ds/Util';
+import Util from '../common/Util';
 
 const RowContainer = styled.div`
 display: flex;

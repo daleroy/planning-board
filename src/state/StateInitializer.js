@@ -1,13 +1,20 @@
-import DataProvider from "./DataProvider.js"
-import PlanGridData from "./PlanGridData.js";
-import Util from '../ds/Util';
+import UrlLoader from "./loader/UrlLoader.js"
+import PlanState from "./PlanState.js";
+import Util from '../common/Util';
+import LoaderFactory from "./loader/LoaderFactory.js";
+import { URL_LOADER } from "../common/Constants.js";
 
 
 
-export default class PlanGridDataProcessor {
-    static PROCESSOR;
-    constructor(){
-        this.CLASS_NAME = ' PlanGridDataProcessor:' ;
+export default class StateInitializer {
+
+    static INITIALIZER;
+
+    constructor(dataLoader, teamLoaderProp, taskLoaderProp){
+        this.c_name = ' PlanGridDataProcessor:' ;
+        this.loader = dataLoader ;
+        this.teamLoaderProp = teamLoaderProp ;
+        this.taskLoaderProp = taskLoaderProp ;
 
         this.props = {};
         //TODO: Fix props key consistency
@@ -20,15 +27,18 @@ export default class PlanGridDataProcessor {
         this.props.capacity.rtb = "rtb";
         this.props.capacity.available = "available_capacity";
 
-        this.planGridData = new PlanGridData();
+        this.planState = new PlanState();
     }
 
     setTaskData = (data) => {
-        this.taskRawData = data ;
+        this.taskRawData = data.data ;
+        this.planState.setRawTaskData(this.taskRawData);
     }
 
     setTeamCapacity = (data) => {
-        this.teamRawData = data ;
+        const m_name = 'setTeamCapacity';
+        this.teamRawData = data.data ;
+        this.planState.setRawTeamData(this.teamRawData);
     }
 
     async process(){
@@ -38,7 +48,7 @@ export default class PlanGridDataProcessor {
 
         this.translate();
 
-        return Promise.resolve(this.planGridData);
+        return Promise.resolve(this.planState);
     }
 
     async processAll(){
@@ -47,21 +57,24 @@ export default class PlanGridDataProcessor {
         await this.processTaskData();
         this.translate();
 
-        let dataCollection = {planGrid: this.planGridData, teamCapacity: this.teamRawData.data, taskRawData: this.taskRawData.data};
+        let dataCollection = {planGrid: this.planState, teamCapacity: this.teamRawData, taskRawData: this.taskRawData};
 
         return Promise.resolve(dataCollection);
     }
 
     async processTeamCapacityData(){
-        let dataProvider = DataProvider.getTeamCapacityProvider();
-        await dataProvider.processCsvData(this.setTeamCapacity)
-        // console.log("Done processing team Capacity Data");
+        const m_name = 'processTeamCapacityData';
+        await this.loader.load(this.teamLoaderProp, this.setTeamCapacity);
+        Util.logDebug(this.c_name, m_name, 'Team Capacity Processing', this.teamRawData);
+
+        // await dataProvider.load(this.setTeamCapacity)
+        
     }
 
     async processTaskData(){
-        let dataProvider = DataProvider.getTasksProvider();
-        await dataProvider.processCsvData(this.setTaskData);
-        // console.log("Done processing team task Data");
+        const m_name = 'processTeamCapacityData';
+        await this.loader.load(this.taskLoaderProp, this.setTaskData).then();
+        Util.logDebug(this.c_name, m_name, 'Team Capacity Processing', this.taskRawData);
     }
 
     translate(){
@@ -75,7 +88,7 @@ export default class PlanGridDataProcessor {
             return ;
         }
 
-        let csvTable = this.teamRawData.data;
+        let csvTable = this.teamRawData;
         let headers = csvTable[0];
 
         let teamIndex = headers.indexOf(this.props.capacity.teamHeader);
@@ -88,9 +101,9 @@ export default class PlanGridDataProcessor {
             let avlCapacity = parseInt(csvTable[i][avlCapIndex]);
             let rtbCapacity = parseInt(csvTable[i][rtbCapIndex]);
 
-            this.planGridData.addTeamCapacity(teamName, avlCapacity, rtbCapacity);
+            this.planState.addTeamCapacity(teamName, avlCapacity, rtbCapacity);
         }
-        return this.planGridData;
+        return this.planState;
     }
 
     translateCsvToTaskData() {
@@ -99,12 +112,12 @@ export default class PlanGridDataProcessor {
             return ;
         }
 
-        let csvTable = this.taskRawData.data;
+        let csvTable = this.taskRawData;
         let headers = csvTable[0];
 
         let rowIndex = headers.indexOf(this.props.rowKey);
         let columnIndex = headers.indexOf(this.props.columnKey);
-        let rowCount = this.taskRawData.data.length;
+        let rowCount = this.taskRawData.length;
         let columnCount = headers.length;
 
         //Remove header row
@@ -112,7 +125,7 @@ export default class PlanGridDataProcessor {
 
         let rowValues = Util.extractColumn(csvTableMinusHeader, rowIndex);
         let columnValues = Util.extractColumn(csvTableMinusHeader, columnIndex);
-        this.planGridData.initialize(rowValues, columnValues);
+        this.planState.initialize(rowValues, columnValues);
 
         for (let i = 1; i < rowCount; ++i) {
             let pivotRowValue;
@@ -142,15 +155,26 @@ export default class PlanGridDataProcessor {
                 }
             }
             // End Processing of a row
-            this.planGridData.addValue(pivotRowValue, pivotColumnValue, taskProps, teamEstimates);
+            this.planState.addValue(pivotRowValue, pivotColumnValue, taskProps, teamEstimates);
         }
-        return this.planGridData;
+        return this.planState;
     }
 
     static getProcessor(){
-        if(!PlanGridDataProcessor.PROCESSOR){
-            PlanGridDataProcessor.PROCESSOR = new PlanGridDataProcessor();
+        if(!StateInitializer.INITIALIZER){
+            StateInitializer.INITIALIZER = new StateInitializer();
         }
-        return PlanGridDataProcessor.PROCESSOR; 
+        return StateInitializer.INITIALIZER; 
+    }
+
+    static testProcessor(){
+        let teamCapProp = {url:'/data/team-capacity.csv'};
+        let taskCapProp = {url:'/data/test-data.csv'};
+        
+        let loader = LoaderFactory.instance().get(URL_LOADER);
+
+        return new StateInitializer(loader, teamCapProp, taskCapProp);
+
+
     }
 }

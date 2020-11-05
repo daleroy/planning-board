@@ -1,11 +1,11 @@
 import React , {useEffect, useState} from 'react';
-import PlanGridDataProcessor from '../state/PlanGridDataProcessor';
+import PlanGridDataProcessor from '../state/StateInitializer';
 import CapacityRow from './CapacityRow';
 import {DragDropContext} from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
 import GridView from './GridView'
-import Util from '../ds/Util'
+import Util from '../common/Util'
 
 const TeamEstimate = styled.div`
 font-size: 12px;
