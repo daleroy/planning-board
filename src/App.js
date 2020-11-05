@@ -24,12 +24,6 @@ export default function App() {
                             setGridData={setGridData}
                             />
                     </Route>
-                    <Route path="/capacity">
-                        <CapacityRow
-                            gridData={gridData}
-                            setGridData={setGridData}
-                            />
-                    </Route>
                     <Route path="/">
                         <Home
                             gridData={gridData}

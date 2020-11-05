@@ -49,7 +49,7 @@ const c_name = 'Home';
 
 
 export default function Home({gridData, setGridData}) {
-    
+
     const onDragEnd = result => {
         const {destination, source, draggableId} = result ;
 
@@ -129,6 +129,10 @@ export default function Home({gridData, setGridData}) {
                     {renderRows(gridData)}
                 </DragDropContext>
                 <EmptyDiv/>
+                    <CapacityRow
+                        gridData={gridData}
+                        setGridData={setGridData}
+                        />
             </React.Fragment>
         )
     }
