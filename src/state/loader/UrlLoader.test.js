@@ -1,5 +1,4 @@
 import UrlLoader from './UrlLoader'
-import * as Constants from '../../common/Constants'
 
 test('Load Simple File', () => {
     let loader = new UrlLoader();

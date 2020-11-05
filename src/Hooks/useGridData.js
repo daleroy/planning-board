@@ -1,8 +1,6 @@
-import React , {useEffect, useState} from 'react';
+import React , {useEffect} from 'react';
 import PlanGridDataProcessor from '../state/StateInitializer';
 import Util from '../common/Util'
-import LoaderFactory from '../state/loader/LoaderFactory';
-import * as constants from '../common/Constants';
 
 
 const c_name = 'useGridData';
@@ -25,7 +23,7 @@ const useGridData = () => {
             Util.logDebug(c_name, m_name, 'After data fetch', data.teamCapacitySummary);
             // setTaskRawData(PlanGridDataProcessor.getProcessor().taskRawData.data);
         });
-    },[]);
+    },[gridData]);
 
   return {gridData, setGridData};
 };

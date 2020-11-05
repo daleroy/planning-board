@@ -1,4 +1,4 @@
-import React , {useEffect} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Util from '../common/Util';
 
@@ -22,7 +22,6 @@ const c_name = 'Capacity Row';
 
 export default function CapacityRow({gridData, setGridData}) {
     const {teamCapacitySummary} = gridData
-    const m_name = 'Capacity Row'
 
     const renderCapacityCell = (capacityObj, quarter) => {
         const m_name = 'renderCapacityCell';
@@ -32,11 +31,9 @@ export default function CapacityRow({gridData, setGridData}) {
 
         capacityObj.forEach((teamCapacity, key) => {
             const {
-                availableCapacity,
                 name,
                 netCapacity,
                 pendingCapacity,
-                rtbCapacity,
                 totalEstimate
             } = teamCapacity;
 

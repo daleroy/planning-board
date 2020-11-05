@@ -1,4 +1,3 @@
-import * as Constants from '../../common/Constants';
 import { URL_LOADER } from '../../common/Constants';
 import UrlLoader from './UrlLoader';
 

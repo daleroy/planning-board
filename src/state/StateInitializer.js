@@ -1,4 +1,3 @@
-import UrlLoader from "./loader/UrlLoader.js"
 import PlanState from "./PlanState.js";
 import Util from '../common/Util';
 import LoaderFactory from "./loader/LoaderFactory.js";
@@ -10,7 +9,7 @@ export default class StateInitializer {
 
     static INITIALIZER;
 
-    constructor(dataLoader, teamLoaderProp, taskLoaderProp){
+    constructor(dataLoader = {}, teamLoaderProp = {}, taskLoaderProp = {}){
         this.c_name = ' PlanGridDataProcessor:' ;
         this.loader = dataLoader ;
         this.teamLoaderProp = teamLoaderProp ;
@@ -68,7 +67,7 @@ export default class StateInitializer {
         Util.logDebug(this.c_name, m_name, 'Team Capacity Processing', this.teamRawData);
 
         // await dataProvider.load(this.setTeamCapacity)
-        
+
     }
 
     async processTaskData(){
@@ -164,13 +163,13 @@ export default class StateInitializer {
         if(!StateInitializer.INITIALIZER){
             StateInitializer.INITIALIZER = new StateInitializer();
         }
-        return StateInitializer.INITIALIZER; 
+        return StateInitializer.INITIALIZER;
     }
 
     static testProcessor(){
         let teamCapProp = {url:'/data/team-capacity.csv'};
         let taskCapProp = {url:'/data/test-data.csv'};
-        
+
         let loader = LoaderFactory.instance().get(URL_LOADER);
 
         return new StateInitializer(loader, teamCapProp, taskCapProp);

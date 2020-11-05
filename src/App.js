@@ -6,7 +6,6 @@ import useGridData from './Hooks/useGridData';
 import DataImporter from './Components/DataImporter';
 import Home from './Components/Home';
 import GridView from './Components/GridView';
-import CapacityRow from './Components/CapacityRow';
 
 export default function App() {
     const {gridData, setGridData} = useGridData();

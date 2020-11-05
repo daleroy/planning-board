@@ -1,18 +1,11 @@
-import React, { useState, useContext, useEffect} from 'react';
+import React, { useState, useEffect} from 'react';
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
-import {GridContext} from '../App.js';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import Util from '../common/Util';
-import PlanGridDataProcessor from '../state/StateInitializer';
 
-const getGridData = () => {
-    const dataProcessor = PlanGridDataProcessor.getProcessor() ;
-    return dataProcessor.processAll();
-}
-
-export default function GridView({csvValues}){
+export default function GridView({gridData, setGridData}){
     const c_name = 'GridView';
     const [header, setHeader] = useState([]);
 
@@ -40,12 +33,9 @@ export default function GridView({csvValues}){
 
 
     useEffect(() => {
-        Util.logTrace(c_name, 'useEffect', 'useEffect called', 'useEffectCalled');
-        
-        getGridData().then(data => {
             let m_name = 'useEffect';
-            Util.logDebug(c_name, m_name, 'Inside isIterableCheck',data);
-            let tableValues = data['taskRawData'];
+            Util.logDebug(c_name, m_name, 'Inside isIterableCheck',gridData);
+            let tableValues = gridData['taskRawData'];
             if(Util.isIterable(tableValues)){
                 const csvClone = [...tableValues];
                 const csvRows = csvClone.slice(1);
@@ -78,16 +68,13 @@ export default function GridView({csvValues}){
                 setRowData(rowData);
                 setHeader(modifiedHeader);
             }
-        });
-    }, []);
+        }, [gridData]);
 
-    return (
-        <div className="ag-theme-alpine" style={ { height: 400, width: 1800 } }>
+        return (
+            <div className="ag-theme-alpine" style={ { height: 400, width: 1800 } }>
                 <AgGridReact onGridReady={onGridReady} rowData={rowData} onCellValueChanged={onChange}>
                     {header.map(x=>{return (<AgGridColumn field={x} headerName={x} editable={true}   sortable={true}></AgGridColumn>)})}
                 </AgGridReact>
-        </div>
-    );
+            </div>
+        );
 };
-                    {/* <AgGridColumn field="model" editable={true}  sortable={true}></AgGridColumn>
-                    <AgGridColumn field="price" editable={true} sortable={true}></AgGridColumn> */}

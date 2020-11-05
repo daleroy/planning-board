@@ -41,7 +41,7 @@ export default class Util{
             let rowDict = {};
             for(let colIndex=0 ; colIndex < header.length; ++ colIndex){
                 let key = header[colIndex];
-                let value = rows[i][colIndex] ;
+                let value = row[colIndex] ;
                 rowDict[key] = value ;
             }
             tupleArray.push(rowDict);
@@ -53,7 +53,7 @@ export default class Util{
         console.log(desc);
     }
     static logo(desc, myObject){
-        console.log(desc + ":%o:"+ " ",myObject);
+        console.log(`${desc} :%o: `,myObject);
     }
 
     static logTrace (className, methodName, desc, myObject){
