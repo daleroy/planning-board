@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
 import GridView from './GridView'
 import Util from '../ds/Util'
-import useGridData from '../Hooks/useGridData';
 
 const TeamEstimate = styled.div`
 font-size: 12px;
@@ -49,9 +48,8 @@ const c_name = 'Home';
 
 
 
-export default function Home(props) {
-    const {gridData, setGridData} = useGridData();
-
+export default function Home({gridData, setGridData}) {
+    
     const onDragEnd = result => {
         const {destination, source, draggableId} = result ;
 
@@ -130,7 +128,6 @@ export default function Home(props) {
                     </RowContainer >
                     {renderRows(gridData)}
                 </DragDropContext>
-                <CapacityRow teamCapacitySummary={gridData.teamCapacitySummary}/>
                 <EmptyDiv/>
             </React.Fragment>
         )

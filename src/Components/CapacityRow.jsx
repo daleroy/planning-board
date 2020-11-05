@@ -20,7 +20,8 @@ border: 1px solid #d8e8f8;
 
 const c_name = 'Capacity Row';
 
-export default function CapacityRow({teamCapacitySummary}) {
+export default function CapacityRow({gridData, setGridData}) {
+    const {teamCapacitySummary} = gridData
     const m_name = 'Capacity Row'
 
     const renderCapacityCell = (capacityObj, quarter) => {
