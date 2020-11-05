@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export default class Util{
     static extractColumn = (array, column) => {return array.map(e=>e[column])};
 
@@ -5,8 +7,9 @@ export default class Util{
     static substractor = (a,b)=>{return a-b};
     static ignoreClassNames = {
         'PlanGridData':true,
-        'PlanGridDataProcessor':true,
+        'StateInitializer':false,
         'Home':false,
+        'Table':false
     }
 
     static removeItem = (array, itemId) =>{
@@ -75,5 +78,17 @@ export default class Util{
                               .concat(desc);
         Util.logo(prefix, myObject);
 
+    }
+
+    static id(){
+        let id = uuidv4();
+        return Util.shortId(id);
+    }
+
+    static shortId(longId) {
+        // remove decoration
+        longId = longId.replace("-", "");
+        let base64String = Buffer.from(longId, 'hex').toString('base64')
+        return base64String;
     }
 }

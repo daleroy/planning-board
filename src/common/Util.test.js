@@ -23,3 +23,7 @@ test('unique values', () => {
     expect(jsonStuff[0]['de.rg']).toBe(3);
 
   });
+
+  test('Short id',()=>{
+    expect(Util.id().length).toBeLessThan(10);
+  });
