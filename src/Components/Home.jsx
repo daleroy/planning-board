@@ -1,21 +1,10 @@
 import React from 'react';
 import CapacityRow from './CapacityRow';
+import Card from './Card';
 import {DragDropContext} from 'react-beautiful-dnd';
 import styled from 'styled-components';
-import {Draggable, Droppable} from 'react-beautiful-dnd';
+import {Droppable} from 'react-beautiful-dnd';
 import Util from '../common/Util'
-
-const TeamEstimate = styled.div`
-font-size: 12px;
-color: #485757;
-`
-
-const TaskContainer = styled.div`
-flex: 1 1 10px;
-background-color: #f0f8ff;
-border: 1px solid #d8e8f8;
-font-size: 14px;
-`;
 
 const RowContainer = styled.div`
 display: flex;
@@ -79,19 +68,7 @@ export default function Home({gridData, setGridData}) {
                         <Row ref={provided.innerRef} {...provided.droppableProps}>
                             {provided.placeholder}
                             {taskList.map((task, index) => {
-                                return (
-                                    <Draggable draggableId={task.id} index={index} key={task.id}>
-                                        {(provided) => (
-                                            <TaskContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} key={index}>
-                                                <div>{task.mfProps.master_feature}</div>
-                                                {Object.keys(task.teamEstimates).map((id, index) => {
-                                                        return <TeamEstimate key={index}>{id} : {task.teamEstimates[id]}</TeamEstimate>
-                                                })}
-
-                                            </TaskContainer>
-                                        )}
-                                    </Draggable>
-                                );
+                                return <Card task={task} index={index} provided={provided}/>
                             })}
                         </Row>
                     )}
