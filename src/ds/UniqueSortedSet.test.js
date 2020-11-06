@@ -16,7 +16,6 @@ test('Order', () => {
   sortedSet.add("Alpha");
   sortedSet.add("Romeo");
   sortedSet.add("Bravo");
-  console.log(sortedSet);
   expect(sortedSet.length()).toBe(3)
   expect(sortedSet.orderedValues[0]).toBe("Alpha");
   expect(sortedSet.orderedValues[1]).toBe("Bravo");
@@ -30,7 +29,6 @@ test('Last Item Entry', () => {
   sortedSet.add("Romeo");
   sortedSet.add("Bravo");
   sortedSet.add("Umbrella");
-  console.log(sortedSet);
   expect(sortedSet.length()).toBe(4)
   expect(sortedSet.orderedValues[0]).toBe("Alpha");
   expect(sortedSet.orderedValues[1]).toBe("Bravo");

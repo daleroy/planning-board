@@ -3,7 +3,7 @@ import UniqueSortedSet from "../ds/UniqueSortedSet.js"
 import Util from '../common/Util'
 
 export default class PlanState {
-
+    static c_name = 'PlanState';
 
     constructor(){
         this.grid = {};
@@ -13,7 +13,7 @@ export default class PlanState {
         this.cellIdToKeyMap = new Map();
         this.taskMaster = new Map();
         this.teamCapacitySummary = new Map();
-        this.c_name = 'PlanGridData'; 
+        this.c_name = 'PlanState'; 
 
     }
 
@@ -72,9 +72,9 @@ export default class PlanState {
     addValue = (rowKey, columnKey, taskProps, teamEstimate)=>{
         const m_name = 'addValue' ;
         // Initialize should have been called before
-        Util.logDebug(this.c_name, m_name, 'In Add Value', 'In Add Value');
-        Util.logDebug(this.c_name, m_name, 'rowKey', rowKey);
-        Util.logDebug(this.c_name, m_name, 'teamEstimate', teamEstimate);
+        Util.logDebug(PlanState.c_name, m_name, 'In Add Value', 'In Add Value');
+        Util.logDebug(PlanState.c_name, m_name, 'rowKey', rowKey);
+        Util.logDebug(PlanState.c_name, m_name, 'teamEstimate', teamEstimate);
 
         let task = new Task(taskProps,teamEstimate);
         this.taskMaster.set(task.id, task);

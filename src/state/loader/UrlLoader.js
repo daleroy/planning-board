@@ -6,7 +6,6 @@ export default class UrlLoader{
 
     async load(prop, callback){
         let url = prop.url ;
-        console.log("url =" + url);
         let csvData = await this.fetchCsv(url);
 
         Papa.parse(csvData, {

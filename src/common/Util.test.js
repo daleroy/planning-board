@@ -22,4 +22,8 @@ test('Table to Json',()=>{
     expect(jsonStuff[0]['ab']).toBe(1);
     expect(jsonStuff[0]['de.rg']).toBe(3);
 
-});
+  });
+
+  test('Short id',()=>{
+    expect(Util.id().length).toBeLessThan(10);
+  });

@@ -8,7 +8,7 @@ const c_name = 'useGridData';
 const useGridData = () => {
     const [gridData, setGridData] = React.useState({columnKeys: {orderedValues: []}, rowKeys: {orderedValues: []}});
 
-    const getGridData = () => {
+    const initPlanState = () => {
         let dataProcessor = PlanGridDataProcessor.testProcessor() ;
         return dataProcessor.process();
     }
@@ -16,7 +16,7 @@ const useGridData = () => {
     useEffect(() => {
         const m_name = 'useEffect';
         Util.logDebug(c_name, m_name, 'Inside..', gridData);
-        getGridData().then(data => {
+        initPlanState().then(data => {
             const m_name = 'useEffect' ;
             window.gridData = data;
             setGridData(data);

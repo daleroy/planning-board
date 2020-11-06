@@ -10,7 +10,7 @@ export default class StateInitializer {
     static INITIALIZER;
 
     constructor(dataLoader = {}, teamLoaderProp = {}, taskLoaderProp = {}){
-        this.c_name = ' PlanGridDataProcessor:' ;
+        this.c_name = 'StateInitializer:' ;
         this.loader = dataLoader ;
         this.teamLoaderProp = teamLoaderProp ;
         this.taskLoaderProp = taskLoaderProp ;
@@ -50,16 +50,16 @@ export default class StateInitializer {
         return Promise.resolve(this.planState);
     }
 
-    async processAll(){
-        const METHOD_NAME = 'processAll' ;
-        await this.processTeamCapacityData();
-        await this.processTaskData();
-        this.translate();
+    // async processAll(){
+    //     const METHOD_NAME = 'processAll' ;
+    //     await this.processTeamCapacityData();
+    //     await this.processTaskData();
+    //     this.translate();
 
-        let dataCollection = {planGrid: this.planState, teamCapacity: this.teamRawData, taskRawData: this.taskRawData};
+    //     let dataCollection = {planGrid: this.planState, teamCapacity: this.teamRawData, taskRawData: this.taskRawData};
 
-        return Promise.resolve(dataCollection);
-    }
+    //     return Promise.resolve(dataCollection);
+    // }
 
     async processTeamCapacityData(){
         const m_name = 'processTeamCapacityData';
