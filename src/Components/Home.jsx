@@ -104,10 +104,10 @@ export default function Home({gridData, setGridData}) {
                     {renderRows(gridData)}
                 </DragDropContext>
                 <EmptyDiv/>
-                    <CapacityRow
-                        gridData={gridData}
-                        setGridData={setGridData}
-                        />
+                <CapacityRow
+                    gridData={gridData}
+                    setGridData={setGridData}
+                />
             </React.Fragment>
         )
     }

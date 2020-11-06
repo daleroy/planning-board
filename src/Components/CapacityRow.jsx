@@ -1,12 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
 import Util from '../common/Util';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const RowContainer = styled.div`
 display: flex;
 flex-wrap: nowrap;
 padding: 0 10px 0 10px;
 `;
+
+const Header = styled.div`
+font-weight: 700;
+font-size: 18px;
+flex: 1 1 20%;
+border: 1px solid black;
+`;
+
 const Row = styled.div`
 flex: 1 1 20%;
 border: 1px solid black;
@@ -39,15 +50,24 @@ export default function CapacityRow({gridData, setGridData}) {
 
             const teamNameArr = name.split('.')
             teamNameArr.shift();
-            const teamNameFormatted = teamNameArr.join(' ');
+            const teamNameFormatted = teamNameArr.reduce((acc, value) => {
+                const [first, ...rest] = value;
+
+                return acc += first.toUpperCase() + rest.join("") + " ";
+            }, "").trim();
+            const chipId = teamNameArr.reduce((acc, value) => {
+                return acc += value[0].toUpperCase();
+            }, "")
 
             retVal.push(
                 <CapacityContainer key={key}>
                     <div>
-                        <div>{teamNameFormatted}</div>
-                        <div>Available Capacity : {netCapacity}</div>
-                        <div>Total Estimate : {totalEstimate}</div>
-                        <div>Pending Capacity : {pendingCapacity}</div>
+                        <Tooltip title={teamNameFormatted}>
+                            <Avatar sizes="small" style={{width: '18px', height: '18px', fontSize: '0.625rem', backgroundColor:'rgb(157 189 221)'}} >{chipId}</Avatar>
+                        </Tooltip>
+                        <Chip style={{borderColor:'rgb(157 189 221)'}} size="small" variant="outlined" label={`Available : ${netCapacity}`} color="primary"/>
+                        <Chip style={{borderColor:'rgb(157 189 221)'}} size="small" variant="outlined" label={`Pending  : ${pendingCapacity}`} color="primary"/>
+                        <Chip style={{borderColor:'rgb(157 189 221)'}} size="small" variant="outlined" label={`Total : ${totalEstimate}`} color="primary"/>
                      </div>
                 </CapacityContainer>
             );
@@ -78,7 +98,7 @@ export default function CapacityRow({gridData, setGridData}) {
 
     return (
         <RowContainer>
-            <Row>Capacity Summary</Row>
+            <Header>Capacity Summary</Header>
             {renderCapacityRow(teamCapacitySummary)}
         </RowContainer>
 
