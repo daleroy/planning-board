@@ -9,7 +9,8 @@ export default class Util{
         'PlanGridData':true,
         'StateInitializer':false,
         'Home':false,
-        'Table':false
+        'Table':false,
+        'NewPlanState':false
     }
 
     static removeItem = (array, itemId) =>{

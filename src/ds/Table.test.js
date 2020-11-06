@@ -1,5 +1,13 @@
 import Table from './Table';
 
+
+// let pivot = {
+//     key:pivotKey,
+//     rowKeys:pivotRowKeys,
+//     colKeys:pivotColumnKeys,
+//     idToKeysMap:idToKeysMap,
+//     viewModel:pivotView
+// }
 test('Table Pivot', () => {
     let csvValues = [['theme', 'period', 'estimate'],
                      ['A', 'Q1', '100'],
@@ -11,10 +19,13 @@ test('Table Pivot', () => {
 
     let table = new Table(props);
     expect(table.header.length).toBe(3);
-    let pivot = table.pivot('theme', 'period');
-    let aq1 = pivot['A']['Q1'].rowList;
+    table.createPivotView('theme', 'period');
+    // let pivot = table.pivot
+    let viewModel = table.pivot.viewModel ;
+
+    let aq1 = viewModel['A']['Q1'].rowList;
     expect(aq1.length).toBe(2);
-    let aq2 = pivot['A']['Q2'].rowList;
+    let aq2 = viewModel['A']['Q2'].rowList;
     expect(aq2.length).toBe(0);
   });
 

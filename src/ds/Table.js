@@ -2,6 +2,24 @@ import Util from '../common/Util';
 import { v4 as uuidv4 } from 'uuid';
 import UniqueSortedSet from './UniqueSortedSet';
 
+/**
+ * Within Pivot View - 
+ * Pivot - pivot = {
+            key:pivotKey,
+            rowKeys:pivotRowKeys,
+            colKeys:pivotColumnKeys,
+            idToKeysMap:idToKeysMap,
+            viewModel:pivotView
+        }
+
+        let pivotKey = {rowKey:rowKey, columnKey:columnKey};
+
+    viewModel[rowKey][colKey] = {id:cellId, rowList:[]};
+    idToKeysMap.set(cellId, {rowKey:rowKey, columnKey:columnKey}
+ * 
+ * 
+ */
+
 export default class Table{
 
     constructor(props){
@@ -42,7 +60,61 @@ export default class Table{
         // Util.logDebug(this.c_name, m_name, 'tableToTuple', rawDataRows);
         return Util.tableToTupleArray(rawDataRows, header);
     }
-    
+
+    //TODO: Rename rowKey, columnKey to fields? 
+    createPivotView = (rowKey, columnKey)=>{
+        let pivotKey = {rowKey:rowKey, columnKey:columnKey};
+        let [pivotView, idToKeysMap] = this.pivot(rowKey, columnKey) ;
+        let pivotRowKeys = this.getSetForKey(rowKey).orderedValues ;
+        let pivotColumnKeys = this.getSetForKey(columnKey).orderedValues ;
+        let pivot = {
+            key:pivotKey,
+            rowKeys:pivotRowKeys,
+            colKeys:pivotColumnKeys,
+            idToKeysMap:idToKeysMap,
+            viewModel:pivotView
+        }
+
+        this.pivot = pivot ;
+    }
+
+    find = (colKey, colValue)=>{
+        let foundRows = this.tupleRowsWithId.filter( item =>{
+            return item[colKey] === colValue ;
+        });
+
+        return foundRows ;
+    }
+
+    findById = (rowId) =>{
+        return this.idToRowMap.get(rowId);
+    }
+
+    keyForCellId = (cellId) =>{
+        let tuple = this.pivot.idToKeysMap.get(cellId);
+        return tuple;
+    }
+
+    move = (taskId, fromCellId, toCellId)=>{
+        let taskTuple = this.findById(taskId);
+
+        const from = this.keyForCellId(fromCellId);
+        const to  = this.keyForCellId(toCellId);
+        const field  = this.pivot.key ;
+
+        // Update task in table
+
+        taskTuple[field.rowKey] = to.rowKey ;
+        taskTuple[field.columnKey] = to.columnKey ;
+
+        //Remove from previous location
+        let taskList = this.pivot.viewModel[from.rowKey][from.columnKey].rowList ; 
+        Util.removeItem(taskList, taskId);
+
+        //Add to new location
+        let targetTaskList = this.pivot.viewModel[to.rowKey][to.columnKey].rowList ; 
+        targetTaskList.push(taskTuple)
+    }
 
     pivot = (rowKey, columnKey)=>{
         const m_name = 'pivot' ;
@@ -61,8 +133,7 @@ export default class Table{
             let itemColumnKey = item[columnKey] ;
             pivotShell[itemRowKey][itemColumnKey].rowList.push(item);
         })
-
-        return pivotShell ;
+        return [pivotShell,idToKeysMap] ;
     }
 
     getSetForKey = (key) => {
@@ -88,6 +159,10 @@ export default class Table{
         })
         return [pivotShell,idToKeysMap] ;
     };
+
+    getHeader = ()=>{
+        return this.header ;
+    }
 
     static fromTabularDataWithHeader(csvValues){
         let props = {tabularData: csvValues};
