@@ -31,8 +31,8 @@ border: 1px solid #d8e8f8;
 
 const c_name = 'Capacity Row';
 
-export default function CapacityRow({gridData, setGridData}) {
-    const {teamCapacitySummary} = gridData
+export default function CapacityRow({planState, setPlanState}) {
+    const {teamCapacitySummary} = planState
 
     const renderCapacityCell = (capacityObj, quarter) => {
         const m_name = 'renderCapacityCell';
@@ -42,13 +42,13 @@ export default function CapacityRow({gridData, setGridData}) {
 
         capacityObj.forEach((teamCapacity, key) => {
             const {
-                name,
+                team,
                 netCapacity,
                 pendingCapacity,
                 totalEstimate
             } = teamCapacity;
 
-            const teamNameArr = name.split('.')
+            const teamNameArr = team.split('.')
             teamNameArr.shift();
             const teamNameFormatted = teamNameArr.reduce((acc, value) => {
                 const [first, ...rest] = value;

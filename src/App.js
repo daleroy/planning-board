@@ -8,7 +8,7 @@ import Home from './Components/Home';
 import GridView from './Components/GridView';
 
 export default function App() {
-    const {gridData, setGridData} = useGridData();
+    const {planState, setPlanState} = useGridData();
 
     return (
         <BrowserRouter>
@@ -19,14 +19,14 @@ export default function App() {
                     </Route>
                     <Route path="/gridView">
                         <GridView
-                            gridData={gridData}
-                            setGridData={setGridData}
+                            planState={planState}
+                            setPlanState={setPlanState}
                             />
                     </Route>
                     <Route path="/">
                         <Home
-                            gridData={gridData}
-                            setGridData={setGridData}
+                            planState={planState}
+                            setPlanState={setPlanState}
                         />
                     </Route>
                 </Switch>

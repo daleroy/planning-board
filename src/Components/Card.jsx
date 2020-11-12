@@ -26,13 +26,20 @@ color: #485757;
 text-align: left;
 `
 export default function Card({task, index, provided}) {
+    const teamEstimates = Object.keys(task).reduce((accumulator, currentValue) => {
+        if (currentValue.startsWith("team.") && task[currentValue] !== "" ) {
+            accumulator[currentValue] = task[currentValue];
+        }
+
+        return accumulator
+    }, {});
 
     return (
         <Draggable draggableId={task.id} index={index} key={task.id}>
             {(provided) => (
                 <TaskContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} key={index}>
-                    <div>{task.mfProps.master_feature}</div>
-                    {Object.keys(task.teamEstimates).map((id, index) => {
+                    <div>{task.master_feature}</div>
+                    {Object.keys(teamEstimates).map((id, index) => {
                         const teamNameArr = id.split('.')
                         teamNameArr.shift();
                         const teamNameFormatted = teamNameArr.reduce((acc, value) => {
@@ -45,9 +52,9 @@ export default function Card({task, index, provided}) {
                         }, "")
 
                             return (
-                                <TeamEstimate key={index}>
+                                <TeamEstimate key={id}>
                                     <Tooltip title={teamNameFormatted}>
-                                        <Chip style={{borderColor:'rgb(157 189 221)'}} size="small" variant="outlined" label={task.teamEstimates[id]} avatar={<Avatar style={{backgroundColor:'rgb(157 189 221)'}} >{chipId}</Avatar>} color="primary"/>
+                                        <Chip style={{borderColor:'rgb(157 189 221)'}} size="small" variant="outlined" label={teamEstimates[id]} avatar={<Avatar style={{backgroundColor:'rgb(157 189 221)'}} >{chipId}</Avatar>} color="primary"/>
                                     </Tooltip>
                                 </TeamEstimate>)
                     })}

@@ -5,7 +5,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import Util from '../common/Util';
 
-export default function GridView({gridData, setGridData}){
+export default function GridView({planState, setPlanState}){
     const c_name = 'GridView';
 
     const [gridApi, setGridApi] = useState(null);
@@ -25,9 +25,9 @@ export default function GridView({gridData, setGridData}){
 
     const prepGridView = ()=>{
         const m_name = 'prepGridView' ;
-        Util.logDebug(c_name, m_name, 'Processing for Grid', gridData);
+        Util.logDebug(c_name, m_name, 'Processing for Grid', planState);
 
-        let tableValues = gridData.taskRawData ;
+        let tableValues = planState.taskRawData ;
 
         if(Util.isIterable(tableValues)){
             const csvClone = [...tableValues];

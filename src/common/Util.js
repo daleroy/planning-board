@@ -88,7 +88,7 @@ export default class Util{
 
     static shortId(longId) {
         // remove decoration
-        longId = longId.replace("-", "");
+        longId = longId.replaceAll("-", "");
         let base64String = Buffer.from(longId, 'hex').toString('base64')
         return base64String;
     }

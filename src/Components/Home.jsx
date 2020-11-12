@@ -35,7 +35,7 @@ const c_name = 'Home';
 
 
 
-export default function Home({gridData, setGridData}) {
+export default function Home({planState, setPlanState}) {
 
     const onDragEnd = result => {
         const {destination, source, draggableId} = result ;
@@ -44,21 +44,22 @@ export default function Home({gridData, setGridData}) {
             return
         }
 
-        gridData.handleMove(draggableId, source.droppableId, destination.droppableId);
-        setGridData(Object.assign({}, gridData))
+        console.log(`***** SAME PLAN STATE: ${planState === window.planState}`)
+        const newPlanState = planState.handleMove(draggableId, source.droppableId, destination.droppableId);
+        setPlanState({...newPlanState});
     }
 
-    const renderColumnHeaders = ({columnKeys}) => {
+    const renderColumnHeaders = ({colKeys}) => {
 
-        return columnKeys.orderedValues.map((id, index) => {
+        return colKeys.map((id, index) => {
             return (<Header key={index}>{id}</Header>);
         });
     }
 
-    const renderRow = (rowValues) => {
+    const renderCell = (rowValues) => {
         const columnKeys = Object.keys(rowValues);
         return columnKeys.map((colName) => {
-            const {id, taskList} = rowValues[colName];
+            const {id, rowList} = rowValues[colName];
 
 
             return (
@@ -67,8 +68,8 @@ export default function Home({gridData, setGridData}) {
 
                         <Row ref={provided.innerRef} {...provided.droppableProps}>
                             {provided.placeholder}
-                            {taskList.map((task, index) => {
-                                return <Card task={task} index={index} provided={provided}/>
+                            {rowList.map((task, index) => {
+                                return <Card key={index} task={task} index={index} provided={provided}/>
                             })}
                         </Row>
                     )}
@@ -77,37 +78,37 @@ export default function Home({gridData, setGridData}) {
             })
         }
 
-        const renderRows = ({rowKeys, grid}) => {
-
-            return rowKeys.orderedValues.map((rowId, index) => {
-                const rowValues = grid[rowId];
-                const rows = renderRow(rowValues);
+        const renderRows = ({rowKeys, viewModel}) => {
+            return rowKeys.map((rowId, index) => {
+                const rowValues = viewModel[rowId];
+                const cells = renderCell(rowValues);
                 return (
                     <RowContainer key={index}>
                         <RowId>{rowId}</RowId>
-                        {rows}
+                        {cells}
                     </RowContainer >
                 );
             });
         }
 
-        // console.dir(gridData);
-        Util.logDebug(c_name, 'Render', 'Grid Data', gridData);
+        // console.dir(planState);
+        Util.logDebug(c_name, 'Render', 'Grid Data', planState);
         // Util.logDebug(c_name, 'Render', 'task raw data ', taskRawData);
         return (
             <React.Fragment>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <RowContainer >
                         <Header>Initatives</Header>
-                        {renderColumnHeaders(gridData)}
+                        {renderColumnHeaders(planState.taskTable.pivot)}
                     </RowContainer >
-                    {renderRows(gridData)}
+                    {renderRows(planState.taskTable.pivot)}
                 </DragDropContext>
                 <EmptyDiv/>
                 <CapacityRow
-                    gridData={gridData}
-                    setGridData={setGridData}
+                    planState={planState}
+                    setPlanState={setPlanState}
                 />
+
             </React.Fragment>
         )
     }
